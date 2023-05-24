@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-/* copy input to output; going back to the 1st version */
+/* copy input to output; 2nd version */
 
 /* important note. at first i didn't understand how/why this works, but then i realized that this confusion is EXACTLY what the second paragraph of the section in page 18 is describing about.
  * when i declare
@@ -48,10 +48,7 @@ main()
 {
 	int c;
 
-	c = getchar();
-	while (c != EOF) {
+	while ((c = getchar()) != EOF)
 		putchar(c);
-		c = getchar();
-	}
 }
 
