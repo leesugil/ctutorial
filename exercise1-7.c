@@ -3,5 +3,5 @@
 /* print the value of EOF */
 main()
 {
-	printf("%d\n", EOF);
+	printf("%d\n", putchar(EOF));
 }
