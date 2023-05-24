@@ -4,5 +4,5 @@ main()
 {
 	int c;
 
-	printf("%d\n", (getchar() != EOF));
+	printf("printf: %d\n", (getchar() != EOF));
 }

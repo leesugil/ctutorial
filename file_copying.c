@@ -28,7 +28,8 @@
  * but it wasn't that c WAS 'abc' from the beginning,
  * but c was 'a', then 'b', then 'c' through the loop.
  * and since char variable only contains 0~255 ascii code (double check),
- * they needed to use the int variable to express the EOF (which is like -1?).
+ * they needed to use the int variable to express the EOF (which is like -1?
+ * it seems like the enter or end of line is 10).
  * python is indeed more conceptually close to scientific thinking,
  * whereas c is literally talking with the machine.
  * now whether the standard library can understand the input stream from a given machine or not is a different issue,
