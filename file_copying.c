@@ -41,6 +41,7 @@
  * follow-up questions:
  * 1) what if i provide more input while the code is learning?
  * 2) how about special function keys such as arrows?
+ * 3) why, why does the while loop not end and waits for more input??
  *
  * i love learning.
  */
