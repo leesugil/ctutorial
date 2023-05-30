@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-/* count characters in input; 1st version */
+/* count characters in input; 2nd version */
 
 /* okay, there's another annoying thing in this code.
  * neither my code or the copy-and-pasted code from the book works as i expect.
@@ -17,11 +17,10 @@
 
 main()
 {
-	long nc;
+	double nc;
 
-	nc = 0;
-	while (getchar() != EOF)
-		++nc;
-	printf("%ld\n", nc);
+	for (nc = 0; getchar() != EOF; ++nc)
+		;
+	printf("%.0f\n", nc);
 }
 
