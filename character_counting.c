@@ -15,6 +15,10 @@
  * different from getchar() used in the book.
  */
 
+/* found it. Enter (\n) does not simulate EOF as vaguely anticipted.
+ * in UNIX environments, ctrl + D simulates EOF.
+ */
+
 main()
 {
 	double nc;
