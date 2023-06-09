@@ -3,11 +3,21 @@
 /* blank counter */
 main()
 {
-	int c, nb;
+	int c, nb, nt, nl;
 
 	nb = 0;
-	while ((c = getchar()) != EOF)
+	nt = 0;
+	nl = 0;
+	while ((c = getchar()) != EOF) {
 		if (c == ' ')
 			nb++;
-	printf("%d\n", nb);
+		if (c == '\t')
+			nt++;
+		if (c == '\n')
+			nl++;
+	}
+
+	printf("blanks: %d\n"
+			"tabs: %d\n"
+			"lines: %d\n", nb, nt, nl);
 }
