@@ -43,6 +43,7 @@ int getline(char line[], int max)
 
 void entab(char output[], char input[])
 {
+	/* entab replaces 
 	int i, j;
 	/* code here */
 }
