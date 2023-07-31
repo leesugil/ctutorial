@@ -19,6 +19,7 @@ main()
 	char line[MAXLINE];
 	char word[MAXLINE];
 
+	initialize(line, MAXLINE);
 	initialize(word, MAXLINE);
 
 	while((len = getline(line, MAXLINE)) > 0) {
@@ -45,62 +46,74 @@ int getline(char s[], int maxline)
 
 void fold(char line[], char word[], int maxcol)
 {
-	int i, j, length, status, print_status;
+	/* read a line, distingush word blocks as blanks followed by non-blanks.
+	 * this could be one of the following forms:
+	 * 1) blank-word
+	 * 2) blank-\n (special case)
+	 * 2) blank-\0 (special case)
+	 * for each i, when line[i] detects a blank, it could mean
+	 * 1) the blank is continued from the previous blank
+	 * 2) the blank indicates the end of a blank-non_blank  sequence and is the beginning of a new word block.
+	 * therefore it is important to check the previous character line[i-1].
+	 * however, if the blank is from line[0], there is no previous character.
+	 * thus maybe we can define a in-word-blank status variable and start with in_word_blank_status = ON.
+	 * in_word_blank_status = OFF if line[i] starts to become non-blank
+	 * so the logic is,
+	 * 1) at i, line[i] yields blank-word -> word[j] = \0, calculate length and print word[] accordingly. (re)set j, length, accordingly.
+	 * 2) at i, line[i] yields blank-\n -> \n-blank-\n? because even if word-blank-\n within MAXCOL, it's still not the desired output based on the requirement that each line should end with the last non-blank character. the requirement inherently prevents any output in this case, it should be okay to just print \n-blank-\n. word[j] = \n, word[j+1] = \0, reset j, length.
+	 * 3) at i, line[i] yields \0 -> word[j] = \0, calculate length and print word[] accordingly. ((re)set j, length, accordingly.) */
+	
+	int i, j, length;
+	int in_word_blank, print_status, read_status;
 
 	j = 0;
 	length = 0;
-	status = OUTWORD;
+	in_word_blank = ON;
 	print_status = OFF;
-	/* read a word as a word with status = INWORD
-	 * read a space group as a word with status = OUTWORD
-	 * treat \n independantly
-	 */
-	/* this code has two flaws
-	 * 1) when line[i] == '\\0', the loop stops, and the last word is omitted from the outcome.
-	 * 2) when a word is longer than maxcol, the word is omitted. */
-	for (i = 0; line[i] != '\0'; ++i) {
-		if (line[i] == '\n') {
-			/* change of line and line length */
-			status = OUTWORD;
-			printf("%c", line[i]);
-			j = 0;
-			length = 0;
+	read_status = ON;
+
+	for (i=0; i<MAXLINE; ++i) {
+		if (line[i] == '\0') {
+			/* end of line */
+			print_status = ON;
+			if (read_status == ON) {
+				read_status = OFF;
+			}
+		}
+		else if (line[i] == '\n') {
+			/* line break */
+			print_status = ON;
+			/* this algorithm doesn't discreminate blank-word and blank-\n. later, word[0] = line[i] = \n will be registered which in turn not properly counting \n-word-type word length. here in this practice, bash prevents \n-word-type input anyway, so we ignore this issue and move on. */
+		}
+		else if (line[i] == ' ' || line[i] == '\t') {
+			/* blank */
+			if (in_word_blank == OFF) {
+				print_status = ON;
+			}
 		}
 		else {
-			/* when word -> blank or blank -> word,
-			 * set print_status = ON.
-			 * otherwise OFF. */
-			if (line[i] == ' ' || line[i] == '\t') {
-				if (status == INWORD) {
-					/* word -> blank */
-					status = OUTWORD;
-					print_status = ON;
-				}
+			/* non-blank character */
+			if (in_word_blank == ON) {
+				in_word_blank = OFF;
 			}
-			else {
-				if (status == OUTWORD) {
-					/* blank -> word */
-					status = INWORD;
-					print_status = ON;
-				}
-			}
+		}
 
-			/* measure the length, print the word properly,
-			 * change line,
-			 * reset length and j to 0 */
-			if (print_status == ON) {
-				/* length of word = j */
-				if (length + j > maxcol) {
-					printf("\n");
-					length = 0;
-				}
-				word[j] = '\0';
-				printf("%s", word);
-				length = length + j;
-				j = 0;
-				initialize(word, MAXLINE);
-				print_status = OFF;
+		if (print_status == ON) {
+			/* length calculation and print */
+			word[j] = '\0';
+			if (length + j > maxcol) {
+				printf("\n");
+				length = 0;
 			}
+			printf("%s", word);
+			length = length + j;
+			j = 0;
+			initialize(word, MAXLINE);
+			in_word_blank = ON;
+			print_status = OFF;
+		}
+
+		if (read_status == ON) {
 			word[j] = line[i];
 			++j;
 		}
