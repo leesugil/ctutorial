@@ -4,8 +4,6 @@
 
 #define	MAXCOL	10
 #define	MAXLINE	1000
-#define	INWORD	1
-#define	OUTWORD	0
 #define	ON	1
 #define	OFF	0
 
