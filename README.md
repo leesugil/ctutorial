@@ -15,7 +15,7 @@ This is a personal study note for learning/recapping the C language.
         * "hello, world\n"
     * newline character
     * escape sequence
-        * \n, \t, \b, \", \\
+        * \n, \t, \b, \\", \\\\
     * comment
         * /\* and \*/
     * declaration
