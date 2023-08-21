@@ -75,3 +75,43 @@ This is a personal study note for learning/recapping the C language.
         * float, double, long double
         * \<limits.h\>
         * \<float.h\>
+    3. Constants
+	* long: 123l or 123L
+	* float: 1.23f or 1.23F
+	* long double: 1.23l or 1.23L
+	* octal: 0123
+	* hexadecimal: 0x123 or 0X123
+	* unsigned long hexadecimal: 0X\*UL
+	* character _constant_: 'x'
+	* '0' != 0 == '\0' null constant
+	* escape sequences
+		* new line: '\n'
+		* octal: '\123'
+		* hex: '\xFF'
+		* '\a' alert (bell) character
+		* '\b' backspace
+		* '\f' formfeed (?)
+		* '\r' carriage return (?)
+		* '\t' horizontal tab
+		* '\v' vertical tab
+		* '\\' backslash
+		* \? question mark
+		* \' single quote
+		* \" double quote
+	* constant _expression_
+		* #define MAXLINE 1000;
+		* evaluated at during compilation rather than run-time (no need to specify type)
+	* string _constant_ (string literal) "I am a string"
+		* concatenation: "a " "b" == "a b"
+	* enumeration _constant_
+		* enum boolean { NO, YES };
+		* enum values are 0, 1, 2, ... unless explicitly specified.
+		* enum escapes { BELL = '\a', BACKSPACE = '\b', TAB = '\t', NEWLINE = '\n', VTAB = '\v', RETURN = '\r' };
+		* enum months { JAN = 1, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC }; /* FEB = 2, MAR =3, etc. */
+			* a good alternative to #define
+			* compilers need not check that what you store in such a variable is a valid value for the enumeration.
+			* a debugger may be able to print values of enumeration variables in their symbolic form.
+    4. Declarations
+	* int lower, upper, step;
+	* char c, line[1000];
+	* float eps = 1.0e-5;
