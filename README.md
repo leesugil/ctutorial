@@ -107,7 +107,7 @@ This is a personal study note for learning/recapping the C language.
 		* enum boolean { NO, YES };
 		* enum values are 0, 1, 2, ... unless explicitly specified.
 		* enum escapes { BELL = '\a', BACKSPACE = '\b', TAB = '\t', NEWLINE = '\n', VTAB = '\v', RETURN = '\r' };
-		* enum months { JAN = 1, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC }; /* FEB = 2, MAR =3, etc. */
+		* enum months { JAN = 1, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC }; /* FEB = 2, MAR =3, etc. \*/
 			* a good alternative to #define
 			* compilers need not check that what you store in such a variable is a valid value for the enumeration.
 			* a debugger may be able to print values of enumeration variables in their symbolic form.
@@ -115,3 +115,17 @@ This is a personal study note for learning/recapping the C language.
 	* int lower, upper, step;
 	* char c, line[1000];
 	* float eps = 1.0e-5;
+    * the equal sign expression serves as an initializer.
+    * automatic variable = local variable
+    * automatic variables are initialized each time the function or block it is in is entered.
+    * const char msd[] = "warning: ";
+    * int strlen(const char[]);
+    5. Arithmetic Operators
+    * +, -, \*, /, %
+    * integer division truncates any fractional part
+    6. Relational and Logical Operators
+    * >, >=, <, <=
+    * ==, !=
+    * &&, ||
+    * The unary negation operator ! convers a non-zero operand into 0, and a zero operand in 1.
+        * if (!valid)
