@@ -129,3 +129,12 @@ This is a personal study note for learning/recapping the C language.
     * &&, ||
     * The unary negation operator ! convers a non-zero operand into 0, and a zero operand in 1.
         * if (!valid)
+    7. Type Conversions
+    * char
+    * if s[] = "1234" and we want to convert it into an integer 1234, use s[i] - '0' for all i to get 1, 2, 3, 4.
+    * to convert c = 'X' into 'x' _for the ASCII character set_ (only), use c - ('A' - 'a') = c + 'a' - 'A'.
+    * isdigit(c)
+    * For portability, specify _signed_ or _unsigned_ if non-character data is to be stored in _char_ variables.
+    * cast
+        * sqrt((double) n)
+    * see formulae for rand in the standard libraries
