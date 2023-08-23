@@ -138,3 +138,10 @@ This is a personal study note for learning/recapping the C language.
     * cast
         * sqrt((double) n)
     * see formulae for rand in the standard libraries
+	8. Increment and Decrement Operators
+	* if n = 5,
+		* x = n++; gives x = 5,
+		* x = ++n; gives x = 6.
+	* s[j++] = s[i];
+	* s[j] = s[i]; j++;
+	* s[i++] = t[j++];
