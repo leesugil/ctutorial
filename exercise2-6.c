@@ -1,9 +1,11 @@
 #include <stdio.h>
 
 /* White a function setbits(x, p, n, y) that returns x with the n bits that begin at position p set to the rightmost n bits of y, leaving the other bits unchanged.
- * The English here was a bit confusing to me, so here's a paraphrased goal:
+ * The English here was a bit confusing to me, so here's my paraphrased goal of the exercise:
  * 1) Take the rightmost n bits of y
  * 2) Overwrite the left n bits of x starting at position p */
+
+/* Note that clearly I was confused with English here, the solution to Exercise 2-7 also fixes setbits for its intended use. */
 
 /* getbits: get n bits from position p where p=0 is the first rightmost position. */
 unsigned getbits(unsigned x, int p, int n)
