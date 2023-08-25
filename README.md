@@ -153,3 +153,6 @@ This is a personal study note for learning/recapping the C language.
 		* >> right shift
 		* ~ complement
 		* n = n & 0177;
+    10. Assignment Operators and Expressions
+        * +=, -=, \*=, /=, %=, <<=, >>=, &=, ^=, |=
+        * yyval[yypv[p3+p4] + yypv[p1]] += 2
