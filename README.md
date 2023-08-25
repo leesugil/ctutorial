@@ -76,68 +76,68 @@ This is a personal study note for learning/recapping the C language.
         * \<limits.h\>
         * \<float.h\>
     3. Constants
-	* long: 123l or 123L
-	* float: 1.23f or 1.23F
-	* long double: 1.23l or 1.23L
-	* octal: 0123
-	* hexadecimal: 0x123 or 0X123
-	* unsigned long hexadecimal: 0X\*UL
-	* character _constant_: 'x'
-	* '0' != 0 == '\0' null constant
-	* escape sequences
-		* new line: '\n'
-		* octal: '\123'
-		* hex: '\xFF'
-		* '\a' alert (bell) character
-		* '\b' backspace
-		* '\f' formfeed (?)
-		* '\r' carriage return (?)
-		* '\t' horizontal tab
-		* '\v' vertical tab
-		* '\\' backslash
-		* \? question mark
-		* \' single quote
-		* \" double quote
-	* constant _expression_
-		* #define MAXLINE 1000;
-		* evaluated at during compilation rather than run-time (no need to specify type)
-	* string _constant_ (string literal) "I am a string"
-		* concatenation: "a " "b" == "a b"
-	* enumeration _constant_
-		* enum boolean { NO, YES };
-		* enum values are 0, 1, 2, ... unless explicitly specified.
-		* enum escapes { BELL = '\a', BACKSPACE = '\b', TAB = '\t', NEWLINE = '\n', VTAB = '\v', RETURN = '\r' };
-		* enum months { JAN = 1, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC }; /* FEB = 2, MAR =3, etc. \*/
-			* a good alternative to #define
-			* compilers need not check that what you store in such a variable is a valid value for the enumeration.
-			* a debugger may be able to print values of enumeration variables in their symbolic form.
+    	* long: 123l or 123L
+    	* float: 1.23f or 1.23F
+    	* long double: 1.23l or 1.23L
+    	* octal: 0123
+    	* hexadecimal: 0x123 or 0X123
+    	* unsigned long hexadecimal: 0X\*UL
+    	* character _constant_: 'x'
+    	* '0' != 0 == '\0' null constant
+    	* escape sequences
+    		* new line: '\n'
+    		* octal: '\123'
+    		* hex: '\xFF'
+    		* '\a' alert (bell) character
+    		* '\b' backspace
+    		* '\f' formfeed (?)
+    		* '\r' carriage return (?)
+    		* '\t' horizontal tab
+    		* '\v' vertical tab
+    		* '\\' backslash
+    		* \? question mark
+    		* \' single quote
+    		* \" double quote
+    	* constant _expression_
+    		* #define MAXLINE 1000;
+    		* evaluated at during compilation rather than run-time (no need to specify type)
+    	* string _constant_ (string literal) "I am a string"
+    		* concatenation: "a " "b" == "a b"
+    	* enumeration _constant_
+    		* enum boolean { NO, YES };
+    		* enum values are 0, 1, 2, ... unless explicitly specified.
+    		* enum escapes { BELL = '\a', BACKSPACE = '\b', TAB = '\t', NEWLINE = '\n', VTAB = '\v', RETURN = '\r' };
+    		* enum months { JAN = 1, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC }; /* FEB = 2, MAR =3, etc. \*/
+    			* a good alternative to #define
+    			* compilers need not check that what you store in such a variable is a valid value for the enumeration.
+    			* a debugger may be able to print values of enumeration variables in their symbolic form.
     4. Declarations
-	* int lower, upper, step;
-	* char c, line[1000];
-	* float eps = 1.0e-5;
-    * the equal sign expression serves as an initializer.
-    * automatic variable = local variable
-    * automatic variables are initialized each time the function or block it is in is entered.
-    * const char msd[] = "warning: ";
-    * int strlen(const char[]);
+    	* int lower, upper, step;
+    	* char c, line[1000];
+    	* float eps = 1.0e-5;
+        * the equal sign expression serves as an initializer.
+        * automatic variable = local variable
+        * automatic variables are initialized each time the function or block it is in is entered.
+        * const char msd[] = "warning: ";
+        * int strlen(const char[]);
     5. Arithmetic Operators
-    * +, -, \*, /, %
-    * integer division truncates any fractional part
+        * +, -, \*, /, %
+        * integer division truncates any fractional part
     6. Relational and Logical Operators
-    * >, >=, <, <=
-    * ==, !=
-    * &&, ||
-    * The unary negation operator ! convers a non-zero operand into 0, and a zero operand in 1.
-        * if (!valid)
+        * >, >=, <, <=
+        * ==, !=
+        * &&, ||
+        * The unary negation operator ! convers a non-zero operand into 0, and a zero operand in 1.
+            * if (!valid)
     7. Type Conversions
-    * char
-    * if s[] = "1234" and we want to convert it into an integer 1234, use s[i] - '0' for all i to get 1, 2, 3, 4.
-    * to convert c = 'X' into 'x' _for the ASCII character set_ (only), use c - ('A' - 'a') = c + 'a' - 'A'.
-    * isdigit(c)
-    * For portability, specify _signed_ or _unsigned_ if non-character data is to be stored in _char_ variables.
-    * cast
-        * sqrt((double) n)
-    * see formulae for rand in the standard libraries
+        * char
+        * if s[] = "1234" and we want to convert it into an integer 1234, use s[i] - '0' for all i to get 1, 2, 3, 4.
+        * to convert c = 'X' into 'x' _for the ASCII character set_ (only), use c - ('A' - 'a') = c + 'a' - 'A'.
+        * isdigit(c)
+        * For portability, specify _signed_ or _unsigned_ if non-character data is to be stored in _char_ variables.
+        * cast
+            * sqrt((double) n)
+        * see formulae for rand in the standard libraries
 	8. Increment and Decrement Operators
 		* if n = 5,
 			* x = n++; gives x = 5,
@@ -166,7 +166,7 @@ This is a personal study note for learning/recapping the C language.
         * () [] -> /
         * ! ~ ++ -- + - * sizeof
         * \* / %
-        * + -
+        * \+ \-
         * \<\< \>\>
         * \< \<= \> \>=
         * == !=
@@ -184,3 +184,5 @@ This is a personal study note for learning/recapping the C language.
         * The order in which function arguments are evaluated is not specified.
             * printf("%d %d\n", ++n, power(2, n));  /* wrong \*/
         * a[i] = i++;   /* wrong \*/
+3. Control Flow
+    1. 
