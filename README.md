@@ -156,3 +156,7 @@ This is a personal study note for learning/recapping the C language.
     10. Assignment Operators and Expressions
         * +=, -=, \*=, /=, %=, <<=, >>=, &=, ^=, |=
         * yyval[yypv[p3+p4] + yypv[p1]] += 2
+    11. Conditional Expressions
+        * if (expr1) expr2; else expr3;
+        * expr1 ? expr2 : expr3
+        * z = (a > b) ? a : b;  /* z = max(a, b) */
