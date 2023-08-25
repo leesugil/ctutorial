@@ -159,4 +159,6 @@ This is a personal study note for learning/recapping the C language.
     11. Conditional Expressions
         * if (expr1) expr2; else expr3;
         * expr1 ? expr2 : expr3
-        * z = (a > b) ? a : b;  /* z = max(a, b) */
+        * z = (a > b) ? a : b;  /* z = max(a, b) \*/
+        * for (i=0; i\<n; ++i) printf("%6d%c", a[i], (i%10==9 || i==n-1) ? '\n' : ' ');
+        * printf("You have %d items%s.\n", n==1 ? "" : "s");
