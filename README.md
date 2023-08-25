@@ -162,3 +162,25 @@ This is a personal study note for learning/recapping the C language.
         * z = (a > b) ? a : b;  /* z = max(a, b) \*/
         * for (i=0; i\<n; ++i) printf("%6d%c", a[i], (i%10==9 || i==n-1) ? '\n' : ' ');
         * printf("You have %d items%s.\n", n==1 ? "" : "s");
+    12. Precedence and Order of Evaluation
+        * () [] -> /
+        * ! ~ ++ -- + - * sizeof
+        * \* / %
+        * + -
+        * \<\< \>\>
+        * \< \<= \> \>=
+        * == !=
+        * &
+        * ^
+        * |
+        * &&
+        * ||
+        * ?:
+        * = += -= \*= /= %= &= ^= |= \<\<= \>\>=
+        * ,
+        * C does not specify the order in which the operands of an operator are evaluated.
+            * x = f() + g();    /* wrong \*/
+            * if either f or g alters a variable on which theother depends, x can depend on the order of evaluation.
+        * The order in which function arguments are evaluated is not specified.
+            * printf("%d %d\n", ++n, power(2, n));  /* wrong \*/
+        * a[i] = i++;   /* wrong \*/
