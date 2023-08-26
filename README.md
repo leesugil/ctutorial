@@ -185,4 +185,13 @@ This is a personal study note for learning/recapping the C language.
             * printf("%d %d\n", ++n, power(2, n));  /* wrong \*/
         * a[i] = i++;   /* wrong \*/
 3. Control Flow
-    1. 
+    1. Statements and Blocks
+        * expression
+        * statement
+            * ; statement terminator
+        * Braces { and } are used to group a _compound statement_, or _block_.
+    2. If-Else
+        * if (expression) {statement} else {statement}
+    3. Else-If
+        * if (expression) {statement} else if (expression) {statement} else {statement}
+        * 
