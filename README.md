@@ -194,4 +194,4 @@ This is a personal study note for learning/recapping the C language.
         * if (expression) {statement} else {statement}
     3. Else-If
         * if (expression) {statement} else if (expression) {statement} else {statement}
-        * 
+        * binary search 
