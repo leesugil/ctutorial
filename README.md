@@ -202,3 +202,32 @@ This is a personal study note for learning/recapping the C language.
                 case const-expr: statements
                 defult: statements
             }
+    5. Loops - While and For
+        * while (expression)
+            statement
+        * A matter of preference
+        * When no initialization or increment conditions, then while is more natural
+    6. Loops - Do-While
+        * Tests the termination condition at the bottom
+        * do
+             statement
+          while (expression);
+        * Useful when at least one loop expression should be executed (like storing at least one data in an array)
+    7. Break and Continue
+        * Not neccessary
+        * Useful when the loop is too complicated
+    8. Goto and Labels
+        * Not neccessary
+        * To abandon processing in some deply nested structure
+        * Break cannot easily replace Goto in the following exaple:
+            for (...)
+                for (...) {
+                    ...
+                    if (disaster)
+                        goto error;
+                }
+            ...
+            error:
+                /\* clean up the mess \*/
+4. Functions and Program Structure
+    
