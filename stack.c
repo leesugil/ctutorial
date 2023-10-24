@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #define	MAXVAL	100	/* maximum depth of val stack */
 
 int sp = 0;	/* next free stack position */
