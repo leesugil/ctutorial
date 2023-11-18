@@ -233,4 +233,9 @@ This is a personal study note for learning/recapping the C language.
     1. Basics of Functions
         * A program is just a set of definitions of variables and functions. Functions can occur in any order in the source file, and the source program can be split into multiple files, so long as no function is split.
         * gcc main.c getline.c strindex.c
-            -> main.o getline.o strindex.o (object files, each in assembly language of the corresponding source file, will be combined with the linker once all source files caused no issues in compiling.) 
+            -> main.o getline.o strindex.o (object files, each in assembly language of the corresponding source file, will be combined with the linker once all source files caused no issues in compiling.)
+    2. Functions Returning Non-integers
+        * double atof(char []);
+        * Such declaration is required for type clarity.
+    3. External Variables
+        * Functions are always external because C does not allow functions to be defined inside other functions.

@@ -8,6 +8,6 @@ main ()
 	double atof(char []);
 
 	while(getline(line, MAXLINE) > 0) {
-		printf("%f\n", atof(line));
+		printf("%g\n", atof(line));
 	}
 }
