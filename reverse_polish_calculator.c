@@ -93,6 +93,7 @@ int getop(char s[])
 		while (isdigit(s[++i] = c = getch()))	/* if s[0] was already a number, collect the rest of the integer part by ++i */
 			;
 	if (c == '.')	/* collect fraction part */
+		/* from the previous s[++i] = c != digit, the current s[i] is already a non-digit. if c == '.', then s[i] = '.' already, so it is enough to collect the rest of integers as decimal points. */
 		while (isdigit(s[++i] = c = getch()))
 			;
 	s[i] = '\0';

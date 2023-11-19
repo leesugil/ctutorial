@@ -1,6 +1,3 @@
-/* Exercise 4-3
- * Add the modulus (%) operator and provisions for negative numbers */
-
 #include <stdio.h>
 #include <stdlib.h>	/* for atof() */
 
@@ -12,6 +9,7 @@ void push(double);
 double pop(void);
 
 /* reverse Polish calculator */
+/* Add the modulus (%) operator and provisions for negative numbers */
 main()
 {
 	int type;
@@ -39,6 +37,13 @@ main()
 					push(pop() / op2);
 				else
 					printf("error: zero divisor\n");
+				break;
+			case '%':
+				op2 = pop();
+				if (op2 != 0.0)
+					push(((int) pop()) % ((int) op2));
+				else
+					printf("error: modulo zero!\n");
 				break;
 			case '\n':
 				printf("\t%.8g\n", pop());
@@ -84,16 +89,18 @@ void ungetch(int);
 /* getop: get next character or numeric operand */
 int getop(char s[])
 {
-	int i, c;
+	int i, c, sign;
 
 	while((s[0] = c = getch()) == ' ' || c == '\t')
 		;
 	s[1] = '\0';
-	if (!isdigit(c) && c != '.')
+	if (c != '-' && !isdigit(c) && c != '.')
 		return c;	/* not a number */
-	i = 0;	/* here s[0] is already either a number or '.' */
+	i = 0;	/* here s[0] is already a negative sign or a number or '.' */
+	if (c == '-')	/* get ready to collect digits */
+		s[++i] = c = getch();
 	if (isdigit(c))	/* collect integer part */
-		while (isdigit(s[++i] = c = getch()))	/* if s[0] was already a number, collect the rest of the integer part by ++i */
+		while (isdigit(s[++i] = c = getch()))
 			;
 	if (c == '.')	/* collect fraction part */
 		while (isdigit(s[++i] = c = getch()))
