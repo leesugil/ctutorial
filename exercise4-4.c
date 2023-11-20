@@ -9,7 +9,7 @@ void push(double);
 double pop(void);
 
 /* reverse Polish calculator */
-/* Add the commands to print the top elements of the stack without popping, to duplicate it, and to swap the top two elements. Add a command to clear the stack. */
+/* Add the commands to print the op elements of the stack without popping, to duplicate it, and to swap the top two elements. Add a command to clear the stack. */
 main()
 {
 	int type;
@@ -39,11 +39,11 @@ main()
 					printf("error: zero divisor\n");
 				break;
 			case '%':
-				op2 = pop();
-				if (op2 != 0.0)
+				op2 = (int) pop();
+				if (op2 != 0)
 					push(((int) pop()) % ((int) op2));
 				else
-					printf("error: modulo zero!\n");
+					printf("error: zero modulo\n");
 				break;
 			case '\n':
 				printf("\t%.8g\n", pop());
@@ -81,36 +81,34 @@ double pop(void)
 	}
 }
 
-/* ptop: print the top element without popping */
-double ptop(void)
+/* topp: print the top elements of the stack without popping */
+double topp(void)
 {
 	if (sp > 0)
-		return val[sp];
+		return val[sp - 1];
 	else {
 		printf("error: stack empty\n");
 		return 0.0;
 	}
 }
 
-/* dtop: duplicate the top element */
-void dtop(void)
+/* topd: duplicate the top element */
+void topd(void)
 {
 	if (sp > 0)
-		push(ptop());
+		val[sp++] = val[sp - 1];
 	else
 		printf("error: stack empty\n");
 }
 
-/* swap: swap the top two elements */
-void swap(void)
+/* tops: swap the top two elements */
+void tops(void)
 {
-	double op1, op2;
-
+	double tmp
 	if (sp > 1) {
-		op2 = pop();
-		op1 = pop();
-		push(op2);
-		push(op1);
+		tmp = val[sp - 2];
+		val[sp - 2] = val[sp - 1];
+		val[sp - 1] = tmp;
 	}
 	else
 		printf("error: stack too low to swap\n");
@@ -120,8 +118,8 @@ void swap(void)
 void clear(void)
 {
 	sp = 0;
-	val[sp] = 0.0;
 }
+
 
 #include <ctype.h>
 
@@ -133,14 +131,25 @@ int getop(char s[])
 {
 	int i, c, sign;
 
-	while((s[0] = c = getch()) == ' ' || c == '\t')
+	/* read the fisrt non-space character */
+	while ((s[0] = c = getch()) == ' ' || c == '\t')
 		;
 	s[1] = '\0';
-	if (c != '-' && !isdigit(c) && c != '.')
-		return c;	/* not a number */
-	i = 0;	/* here s[0] is already a negative sign or a number or '.' */
-	if (c == '-')	/* get ready to collect digits */
-		s[++i] = c = getch();
+	i = 0;
+	/* should understand the following commands:
+	 * topp, topd, tops, clear */
+	if (!isdigit(c) && c != '.') {
+		if (c == '-') { /* handle the negative sign separately */
+			if (isdigit(c = getch()) || c == '.')
+				s[++i] = c; /* negative number */
+			else {
+				ungetch(c);
+				return '-';
+			}
+		}
+		else
+			return c;	/* not a number */
+	}
 	if (isdigit(c))	/* collect integer part */
 		while (isdigit(s[++i] = c = getch()))
 			;
@@ -148,8 +157,13 @@ int getop(char s[])
 		while (isdigit(s[++i] = c = getch()))
 			;
 	s[i] = '\0';
-	if (c != EOF)
+	if (c != EOF) {
+		/* sending the remaining line to the buffer.
+		 * for example, if the input line was
+		 * "1 2 +\nEOF",
+		 * then in the first loop of reading, it should just read "1" and send the remaining " " to the buffer. */
 		ungetch(c);
+	}
 	return NUMBER;
 }
 
