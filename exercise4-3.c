@@ -89,13 +89,25 @@ void ungetch(int);
 /* getop: get next character or numeric operand */
 int getop(char s[])
 {
-	int i, c;
+	int i, c, sign;
 
+	/* read the fisrt non-space character */
 	while ((s[0] = c = getch()) == ' ' || c == '\t')
 		;
+	/*s[1] = '\0'; finish reading after reading only one first non-space character.
+	 * this is from the original code, and would work well if the first character is all we need to read.
+	 * however, this wouldn't be sufficient to check if the first read '-' would mean an operator or a negative sign followed by digits.
+	 * it is necessary to read the next character to determine it.
+	so here's the plan:
+	1) read up to two character slots
+	2) if s[0] is '-', determine if it's an operator or a negative sign
+	3) proceed as original */
+	printf("c == %c, s[0] == %c\n", c, s[0]);
 	s[1] = '\0';
-	if (!isdigit(c) && c != '.')
-		return c;	/* not a number */
+	if (!isdigit(s[0]) && s[0] != '.') {
+		printf("s[0] == %c, c == %c\n", s[0], c);
+		return c;
+	}
 	i = 0;
 	if (isdigit(c))	/* collect integer part */
 		while (isdigit(s[++i] = c = getch()))
@@ -104,8 +116,14 @@ int getop(char s[])
 		while (isdigit(s[++i] = c = getch()))
 			;
 	s[i] = '\0';
-	if (c != EOF)
+	if (c != EOF) {
+		/* sending the remaining line to the buffer.
+		 * for example, if the input line was
+		 * "1 2 +\nEOF",
+		 * then in the first loop of reading, it should just read "1 " and send the remaining "2 +\nEOF" to the buffer. */
+		printf("ungetting\n");
 		ungetch(c);
+	}
 	return NUMBER;
 }
 
