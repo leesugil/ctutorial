@@ -102,13 +102,20 @@ int getop(char s[])
 	1) read up to two character slots
 	2) if s[0] is '-', determine if it's an operator or a negative sign
 	3) proceed as original */
-	printf("c == %c, s[0] == %c\n", c, s[0]);
 	s[1] = '\0';
-	if (!isdigit(s[0]) && s[0] != '.') {
-		printf("s[0] == %c, c == %c\n", s[0], c);
-		return c;
-	}
 	i = 0;
+	if (!isdigit(c) && c != '.') {
+		if (c == '-') { /* handle the negative sign separately */
+			if (isdigit(c = getch()) || c == '.')
+				s[++i] = c; /* negative number */
+			else {
+				ungetch(c);
+				return '-';
+			}
+		}
+		else
+			return c;	/* not a number */
+	}
 	if (isdigit(c))	/* collect integer part */
 		while (isdigit(s[++i] = c = getch()))
 			;
@@ -120,8 +127,7 @@ int getop(char s[])
 		/* sending the remaining line to the buffer.
 		 * for example, if the input line was
 		 * "1 2 +\nEOF",
-		 * then in the first loop of reading, it should just read "1 " and send the remaining "2 +\nEOF" to the buffer. */
-		printf("ungetting\n");
+		 * then in the first loop of reading, it should just read "1" and send the remaining " " to the buffer. */
 		ungetch(c);
 	}
 	return NUMBER;
