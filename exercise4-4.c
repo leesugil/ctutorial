@@ -7,14 +7,17 @@
 int getop(char []);
 void push(double);
 double pop(void);
+void clear(void);
 
 /* reverse Polish calculator */
 /* Add the commands to print the op elements of the stack without popping, to duplicate it, and to swap the top two elements. Add a command to clear the stack. */
 main()
 {
 	int type;
-	double op2;
+	double op2, op3;
 	char s[MAXOP];
+
+	printf("type 'h' for commands\n");
 
 	while ((type = getop(s)) != EOF) {
 		switch (type) {
@@ -44,6 +47,33 @@ main()
 					push(((int) pop()) % ((int) op2));
 				else
 					printf("error: zero modulo\n");
+				break;
+			case 'h':
+				/* print commands */
+				printf("p: print top\nd: duplicate top\ns: swap top two\nc: clear stack\n");
+				break;
+			case 'p':
+				/* print top */
+				push(op2 = pop());
+				push(op2); /* to be popped by '\n' for print */
+				break;
+			case 'd':
+				/* duplicate top */
+				push(op2 = pop());
+				push(op2);
+				push(op2); /* to be popped by '\n' for print */
+				break;
+			case 's':
+				/* swap top */
+				op2 = pop();
+				op3 = pop();
+				push(op2);
+				push(op3);
+				push(op3); /* to be popped by '\n' for print */
+				break;
+			case 'c':
+				/* clear stack */
+				clear();
 				break;
 			case '\n':
 				printf("\t%.8g\n", pop());
@@ -81,39 +111,6 @@ double pop(void)
 	}
 }
 
-/* topp: print the top elements of the stack without popping */
-double topp(void)
-{
-	if (sp > 0)
-		return val[sp - 1];
-	else {
-		printf("error: stack empty\n");
-		return 0.0;
-	}
-}
-
-/* topd: duplicate the top element */
-void topd(void)
-{
-	if (sp > 0)
-		val[sp++] = val[sp - 1];
-	else
-		printf("error: stack empty\n");
-}
-
-/* tops: swap the top two elements */
-void tops(void)
-{
-	double tmp
-	if (sp > 1) {
-		tmp = val[sp - 2];
-		val[sp - 2] = val[sp - 1];
-		val[sp - 1] = tmp;
-	}
-	else
-		printf("error: stack too low to swap\n");
-}
-
 /* clear: clear the stack */
 void clear(void)
 {
@@ -147,8 +144,9 @@ int getop(char s[])
 				return '-';
 			}
 		}
-		else
+		else {
 			return c;	/* not a number */
+		}
 	}
 	if (isdigit(c))	/* collect integer part */
 		while (isdigit(s[++i] = c = getch()))
