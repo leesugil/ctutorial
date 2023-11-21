@@ -6,7 +6,7 @@
 
 #define	MAXOP	100	/* max size of operand or operator */
 #define	NUMBER	'0'	/* signal that a number was found */
-#define MATH	'-1'	/* signal that math library is called */
+#define MATH	'1'	/* signal that math library is called */
 
 int getop(char []);
 void push(double);
@@ -125,7 +125,7 @@ void clear(void)
 	sp = 0;
 }
 
-unsigned long uf
+unsigned long long uf(char []);
 
 void math(char s[])
 {
@@ -137,16 +137,57 @@ void math(char s[])
 	since it's also equally tedious to hard-code character comparions one by one,
 	let's have some fun coding with number */
 
-	int l = strlen(s);
-	int prime[] = {2, 3, 5, 7, 11, 13};
-	int i;
-	unsigned long n = 1;
+	double tmp;
+	unsigned long long n = uf(s);
 
-	for (i = 0; s[i] != '\0'; i++)
-		n = pow(n, s[i]);
+	if (n == uf("sin")) {
+		printf("debug: sin calculation with n = %llu, uf = %llu\n", n, uf("sin"));
+		push(sin(pop()));
+		printf("debug: sin(0.5 rad) = %g\n", sin(0.5));
+	}
+	else if (n == uf("cos")) {
+		printf("debug: cos calculation with n = %llu, uf = %llu\n", n, uf("cos"));
+		push(cos(pop()));
+		printf("debug: cos(0.5 rad) = %g\n", cos(0.5));
+	}
+	else if (n == uf("exp")) {
+		printf("debug: exp calculation with n = %llu, uf = %llu\n", n, uf("exp"));
+		push(exp(pop()));
+		printf("debug: exp(1) = %g\n", exp(1));
+	}
+	else if (n == uf("pow")) {
+		printf("debug: pow calculation with n = %llu, uf = %llu\n", n, uf("pow"));
+		tmp = pop();
+		push(pow(pop(), tmp));
+		printf("debug: pow(1, 1) = %g\n", pow(1, 1));
+	}
+	else
+		printf("error: unknown command\n");
 }
 
+/* okay, here's an interesting outcome.
+I underestimated how exponentials would grow so quickly!
+first i used unsigned long and couldn't figure out why sin worked well, but cos and exp and pow were indifferentiable.
+then i realized that it was simply because the values of uf() went out of range quickly.
+so i used llu to see if it could handle cos, exp, and pow.
+the result was no!
+Goedel's laughing at me in the grave. */
+unsigned long long uf(char s[])
+{
+	int p[] = {2, 3, 5, 7, 11, 13};
+	int i;
+	unsigned long long n = 1;
 
+	if (strlen(s) < 7) {
+		for (i = 0; s[i] != '\0'; i++)
+			n *= pow(p[i], s[i] - 'a');	
+		return n;
+	}
+	else {
+		printf("string too long\n");
+		return 0;
+	}
+}
 
 int getch(void);
 void ungetch(int);
@@ -171,6 +212,17 @@ int getop(char s[])
 				ungetch(c);
 				return '-';
 			}
+		}
+		else if ('a' <= c && c <= 'z') {
+			while ((s[++i] = c = getch()) != ' ' && c != '\t' && c != '\n')
+				;
+			s[i] = '\0';
+			if (c != EOF)
+				ungetch(c);
+			if (i > 2)
+				return MATH;
+			else
+				return s[0];
 		}
 		else {
 			return c;	/* not a number */
