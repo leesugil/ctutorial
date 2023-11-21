@@ -136,31 +136,25 @@ void math(char s[])
 	this is against our approach (feels "cheating").
 	since it's also equally tedious to hard-code character comparions one by one,
 	let's have some fun coding with number */
+	/* edit: okay, the unique factorization method took up much larger bit space then i hoped to be practical!
+	 * going back to the honest hardwork */
 
 	double tmp;
-	unsigned long long n = uf(s);
+	int l = strlen(s);
 
-	if (n == uf("sin")) {
-		printf("debug: sin calculation with n = %llu, uf = %llu\n", n, uf("sin"));
-		push(sin(pop()));
-		printf("debug: sin(0.5 rad) = %g\n", sin(0.5));
-	}
-	else if (n == uf("cos")) {
-		printf("debug: cos calculation with n = %llu, uf = %llu\n", n, uf("cos"));
-		push(cos(pop()));
-		printf("debug: cos(0.5 rad) = %g\n", cos(0.5));
-	}
-	else if (n == uf("exp")) {
-		printf("debug: exp calculation with n = %llu, uf = %llu\n", n, uf("exp"));
-		push(exp(pop()));
-		printf("debug: exp(1) = %g\n", exp(1));
-	}
-	else if (n == uf("pow")) {
-		printf("debug: pow calculation with n = %llu, uf = %llu\n", n, uf("pow"));
-		tmp = pop();
-		push(pow(pop(), tmp));
-		printf("debug: pow(1, 1) = %g\n", pow(1, 1));
-	}
+	if (l == 3)
+		if (s[0] == 's' && s[1] == 'i' && s[2] == 'n')
+			push(sin(pop()));
+		else if (s[0] == 'c' && s[1] == 'o' && s[2] == 's')
+			push(cos(pop()));
+		else if (s[0] == 'e' && s[1] == 'x' && s[2] == 'p')
+			push(exp(pop()));
+		else if (s[0] == 'p' && s[1] == 'o' && s[2] == 'w') {
+			tmp = pop();
+			push(pow(pop(), tmp));
+		}
+		else
+			printf("error: unknown command\n");
 	else
 		printf("error: unknown command\n");
 }
@@ -174,6 +168,7 @@ the result was no!
 Goedel's laughing at me in the grave. */
 unsigned long long uf(char s[])
 {
+	/* discontinued */
 	int p[] = {2, 3, 5, 7, 11, 13};
 	int i;
 	unsigned long long n = 1;
