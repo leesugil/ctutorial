@@ -19,13 +19,8 @@ void vstore(char []);
 void vcall(char []);
 
 /* reverse Polish calculator */
-/* Suppose that there will never be more than one character of pushback. Modify getch and ungetch accordingly. */
-/* comment: i don't know if i understood the question clearly.
-a working solution would be just setting BUFSIZE = 1,
-but then the question reduces to changing getch and ungetch handle a single character input/output instead of the buffer array.
-where's the challenge, or some significance of the modification?
-maybe it'll become more clear in later examples,
-we just take BUFSIZE = 1 and move on */
+/* Our getch and ungetch do not handle a pushed-back EOF correctly. Decide what their properties ought to be if an EOF is pushed back, then implement your design. */
+/* comment: in the original code, when getop is called, EOF doesn't even get sent to the buffer array. */
 main()
 {
 	int type;
