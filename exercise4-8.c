@@ -20,6 +20,12 @@ void vcall(char []);
 
 /* reverse Polish calculator */
 /* Suppose that there will never be more than one character of pushback. Modify getch and ungetch accordingly. */
+/* comment: i don't know if i understood the question clearly.
+a working solution would be just setting BUFSIZE = 1,
+but then the question reduces to changing getch and ungetch handle a single character input/output instead of the buffer array.
+where's the challenge, or some significance of the modification?
+maybe it'll become more clear in later examples,
+we just take BUFSIZE = 1 and move on */
 main()
 {
 	int type;
@@ -43,8 +49,7 @@ main()
 			case VCALL:
 				vcall(s);
 				printf("\tvariable called\n");
-				break;
-			case '+':
+				break case '+':
 				push(pop() + pop());
 				break;
 			case '*':
@@ -263,7 +268,7 @@ int getop(char s[])
 			;
 	s[i] = '\0';
 	if (c != EOF) {
-		/* sending the remaining line to the buffer.
+		/* sending the remaining line to the offer.
 		 * for example, if the input line was
 		 * "1 2 +\nEOF",
 		 * then in the first loop of reading, it should just read "1" and send the remaining " " to the buffer. */
@@ -272,7 +277,7 @@ int getop(char s[])
 	return NUMBER;
 }
 
-#define	BUFSIZE	100
+#define	BUFSIZE	1
 
 char buf[BUFSIZE];	/* buffer for ungetch */
 int bufp = 0;	/* next free position in buff */
