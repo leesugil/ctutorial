@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <ctype.h>
 
-/* getline: get line into s, return length */
-int getline(char s[], int lim)
+/* getline2: get line into s, return length.
+ * 2 to avoid conflict with the standard library function */
+int getline2(char s[], int lim)
 {
 	int c, i;
 
@@ -29,7 +30,7 @@ double atof(char s[])
 	for (val = 0.0; isdigit(s[i]); i++) {
 		val = 10.0 * val + (s[i] - '0');
 	}
-	if (s[i] = '.')
+	if (s[i] == '.')
 		i++;	/* skip decimal point character */
 	for (power = 1.0; isdigit(s[i]); i++) {
 		val = 10.0 * val + (s[i] - '0');
