@@ -20,7 +20,17 @@ void vcall(char []);
 
 /* reverse Polish calculator */
 /* Our getch and ungetch do not handle a pushed-back EOF correctly. Decide what their properties ought to be if an EOF is pushed back, then implement your design. */
-/* comment: in the original code, when getop is called, EOF doesn't even get sent to the buffer array. */
+/* comment: in the original code, here's how EOF is handled.
+* if the buffer is empty and ctrl+D (for EOF) is provided,
+* getop returns it to the while loop in main() which breaks the loop.
+* if the buffer is not empty like the following line, for example:
+* "1 3 5 + (ctrl+D)"
+* then since getop just returns EOF without saving it to the buffer,
+* and the buffer is left without the EOF part, and getchar() runs immediately.
+* (this doesn't get displayed properly in the command line.) 
+* so the design should be updated so that, even if EOF is provided in the middle of input stream, the program should close at where EOF occurs.
+* now storing EOF in buffer is the main goal.
+* note that the integer value of EOF is -1, whereas char has the 0-255 range in my device. */
 main()
 {
 	int type;
@@ -232,7 +242,11 @@ int getop(char s[])
 		else
 			ungetch(c);
 	}
+	if (c == EOF)
+		printf("getop: first EOF check\n");
 	if (!isdigit(c) && c != '.') {
+		if (c == EOF)
+			printf("getop: second EOF check\n");
 		if (c == '-') { /* handle the negative sign separately */
 			if (isdigit(c = getch()) || c == '.')
 				s[++i] = c; /* negative number */
@@ -242,17 +256,18 @@ int getop(char s[])
 			}
 		}
 		else if ('a' <= c && c <= 'z') {
-			while ((s[++i] = c = getch()) != ' ' && c != '\t' && c != '\n')
+			while ((s[++i] = c = getch()) != ' ' && c != '\t' && c != '\n' && c != EOF)
 				;
 			s[i] = '\0';
-			if (c != EOF)
-				ungetch(c);
+			ungetch(c);
 			if (i > 2)
 				return MATH;
 			else
 				return s[0];
 		}
 		else {
+			if (c == EOF)
+				printf("getop: third EOF check, c == EOF: %d\n", c);
 			return c;	/* not a number */
 		}
 	}
@@ -263,24 +278,26 @@ int getop(char s[])
 		while (isdigit(s[++i] = c = getch()))
 			;
 	s[i] = '\0';
-	if (c != EOF) {
-		/* sending the remaining line to the offer.
-		 * for example, if the input line was
-		 * "1 2 +\nEOF",
-		 * then in the first loop of reading, it should just read "1" and send the remaining " " to the buffer. */
-		ungetch(c);
-	}
+	if (c == EOF)
+		printf("getop: fourth EOF check\n");
+	ungetch(c);
 	return NUMBER;
 }
 
-#define	BUFSIZE	1
+#define	BUFSIZE	100
 
-char buf[BUFSIZE];	/* buffer for ungetch */
+int buf[BUFSIZE];	/* buffer for ungetch */
 int bufp = 0;	/* next free position in buff */
 
 int getch(void)	/* get a (possibly pushed-back) character */
 {
-	return (bufp > 0) ? buf[--bufp] : getchar();	/* beautiful */
+	/* return (bufp > 0) ? buf[--bufp] : getchar();	beautiful */
+	if (bufp > 0)
+		return buf[--bufp];
+	else {
+		printf("getch: buf empty, running getchar\n");
+		return getchar();
+	}
 }
 
 void ungetch(int c)	/* push character back on input */
@@ -289,6 +306,11 @@ void ungetch(int c)	/* push character back on input */
 		printf("ungetch: too many characters\n");
 	else
 		buf[bufp++] = c;
+	int i = 0;
+	printf("ungetch: buf: ");
+	while (i++ < BUFSIZE)
+		printf("[%c, %d], ", buf[i], buf[i]);
+	printf("\n");
 }
 
 /* ungets: push back an entire string onto the input. */
