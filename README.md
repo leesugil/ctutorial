@@ -246,3 +246,6 @@ This is a personal study note for learning/recapping the C language.
 	* declaration
 		* extern double val[];
     5. Header Files
+    6. Static Variables
+    	* static char buf[BUFSIZE];
+	* The static declaration can also be applied to internl variables. Internal static variables are local to a particular function just as automatic variables are, but unlike automatics, they remain in existence rather than coming and going each time the function is activated. This means that internal static variables provide private, permanent storage within a single function.
