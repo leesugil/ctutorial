@@ -239,3 +239,10 @@ This is a personal study note for learning/recapping the C language.
         * Such declaration is required for type clarity.
     3. External Variables
         * Functions are always external because C does not allow functions to be defined inside other functions.
+    4. Scope Rules
+    	* If an external variable is to be referred to before it is defined, or if it is defined in a different source file from the one where it is being used, then an *extern* declaration is ***mandatory***.
+	* definition
+		* double val[MAXVAL];
+	* declaration
+		* extern double val[];
+    5. Header Files
