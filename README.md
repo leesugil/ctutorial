@@ -247,5 +247,20 @@ This is a personal study note for learning/recapping the C language.
 		* extern double val[];
     5. Header Files
     6. Static Variables
+    	* The static declaration, applied to an external variable or function, limits the scope of that object to the rest of the source file being compiled.
     	* static char buf[BUFSIZE];
 	* The static declaration can also be applied to internl variables. Internal static variables are local to a particular function just as automatic variables are, but unlike automatics, they remain in existence rather than coming and going each time the function is activated. This means that internal static variables provide private, permanent storage within a single function.
+    7. Register Variables
+	* Register variables are (to be) stored in machine registers.
+    8. Block Structure
+	* As a matter of style, it's best to avoid variable names that conceal names in an outer scope; the potential of confusion and error is too great.
+    9. Initialization
+    	* external and static variables are initialized to zero.
+		* The initializer must be a constant expression.
+		* The initialization is done once, conceptually before the program begins execution.
+	* automatic and register variables have undefined (i.e., garbage) initial values.
+		* The initializer is not restricted to being a constant: it may be any expression involving previously defined values, even function calls.
+	* An array may be initialized by following its declaration with a list of initializers enclosed in braces and separated by commas.
+    10. Recursion
+    	* Useful when reversing order like printing digits of an integer.
+	* quicksort
