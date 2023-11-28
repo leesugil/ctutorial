@@ -264,3 +264,10 @@ This is a personal study note for learning/recapping the C language.
     10. Recursion
 		* Useful when reversing order like printing digits of an integer.
 		* quicksort
+	11. The C Preprocessor
+		* File Inclusion
+			* #include *filename*
+		* Macro Substitution
+			* #define max(A, B) ((A) > (B) ? (A) : (B))
+			* #define dprint(expr) printf(#expr " = %g\n", expr)
+			* #define paste(front, back) front ## back
