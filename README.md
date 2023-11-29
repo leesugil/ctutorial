@@ -271,3 +271,11 @@ This is a personal study note for learning/recapping the C language.
 			* #define max(A, B) ((A) > (B) ? (A) : (B))
 			* #define dprint(expr) printf(#expr " = %g\n", expr)
 			* #define paste(front, back) front ## back
+		* Conditional Inclusion
+			* #if
+			* #endif
+			* #elif
+			* #else
+			* #ifndef
+5. Pointers and Arrays
+	1. 
