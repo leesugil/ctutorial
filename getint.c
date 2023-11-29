@@ -32,6 +32,11 @@ main()
 {
 	int n, array[SIZE], getint(int *);
 
+	printf("array[SIZE] = ");
+	for (n = 0; n < SIZE; n++)
+		printf("%d, ", array[n]);
+	printf("\n");
+
 	for (n = 0; n < SIZE && getint(&array[n]) != EOF; n++)
 		;
 	/* if getint takes an integer argument, passing array[n] as an integer wouldn't make any change to it */
@@ -53,4 +58,7 @@ main()
    wait, is EOF 0?
    no, EOF == -1.
    not all array[n] is initialized to be zero, how was it treated?
+   it doesn't seem to make sense as the following reason:
+   if inputs are numbers and spaces, it works well.
+   if an input is a character c, then it ungetch(c) and return 0 which leads to n++, so the current array[n] was left at the garbage value and we moved on. furthermore, c was ungetted, so the next loop calls the same c = getch() which creates a cyclic loop through n++ until n < SIZE.
 */
