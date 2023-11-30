@@ -278,4 +278,9 @@ This is a personal study note for learning/recapping the C language.
 			* #else
 			* #ifndef
 5. Pointers and Arrays
-	1. 
+	1. Pointers and Addresses
+		* p = &c; => \*p == c
+	2. Pointers and Function Arguments
+		* swap(&a, &b);
+	3. Pointers nad Arrays
+		*
