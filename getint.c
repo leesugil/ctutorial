@@ -8,6 +8,10 @@
 int getint(int *pn)
 {
 	int c, sign;
+
+	extern int getch(void);
+	extern void ungetch(int);
+
 	while (isspace(c = getch()))	/* skip white space */
 		;
 	if (!isdigit(c) && c != EOF && c != '+' && c != '-') {
