@@ -283,4 +283,39 @@ This is a personal study note for learning/recapping the C language.
 	2. Pointers and Function Arguments
 		* swap(&a, &b);
 	3. Pointers nad Arrays
-		*
+		* In C, there is a strong relationship between pointers and arrays, strong enough that pointers and arrays should be discussed simultaneously.
+			* **The pointer version will in general be faster.**
+		* By definition, the value of a variable or expression of type array is the address of element zero of the array.
+			* pa = &a[0]; => *pa* and *a* have identical values.
+		* The name of an array (*a*) is a synonum for the location of the initial elemetn (*a[0]*).
+			* pa = &a[0]; <=> pa = a;
+			* => a[i] == \*(a+i)
+		* In evaluating a[i], C converts it to \*(a+i); the two forms re euivalent.
+			* => &a[i] == a+i
+		* pa pointer => pa[i] == \*(pa+i)
+		* So literally *a* pointer => a[i] == \*(a + i)
+		* Then what's the difference between an array name such as *a* and a pointer such as *pa*? A pointer is a variable, so the following things are legal (which will be illegal for *a*):
+			* pa = a;
+			* pa++
+		* When an array name (*a*) is passed to a function, what is passed is the location of the initial element (*&a[0]*).
+		* As formal parameters in a function definition, the followings are equivalent:
+			* char s[];
+			* char \*s;   <-- **preferred**
+		* It is possible to pass part of an array to a function, by passing a pointer to the beginning of the subarray.
+			* f(&a[2])
+			* f(a+2)
+	4. Address Arithmetic
+		* The symbolic constant NULL is often used in place of zero, as a mnemonic to indicate more clearly that this is a special value for a pointer.
+			* NULL is defined in <stdio.h>
+		* Pointers may be compared under certain circumstances.
+			* If p, q point to members of the same array, then relations like ==, !=, <, >=, etc., work properly.
+				* Once exception: the address of the first element past the end of an array can be used in pointer arithmetic.
+		* A pointer and an integer may be added or subtraced.
+			* p+n means the address of the n-th object beyond the one p currently points to.
+				* This is true regardless of the kind of object p points to; n is scaled according to the size of the objects p points to, which is determined by the declaration of p.
+		5. Character Pointers and Functions
+			* char \*pmessage; => pmessage = "now is the time"; assigns to pmessage a pointer ro the character array. This is *not* a string copy; only pointers are involved.
+				* char amessage[] = "now is the time";	/* an array \*/
+				* char \*pmessage = "now is the time";	/* a pointer \*/
+			* strcpy
+			* strcmp

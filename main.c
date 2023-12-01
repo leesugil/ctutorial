@@ -1,18 +1,15 @@
 #include <stdio.h>
-#define	MAXLINE	1000 /* maximum inputline length */
 
-char pattern[] = "ould"; /* pattern to search for */
-
-/* find all lines matching pattern */
-main ()
+main()
 {
-	char line[MAXLINE];
-	int found = 0;
+	int n, a[5], *pa;
 
-	while (getline(line, MAXLINE) > 0)
-		if (strindex(line, pattern) >= 0) {
-			printf("%s", line);
-			found++;
-		}
-	return found;
+	pa = &a[0];
+
+	for (n = 0; n < 5; n++)
+		a[n] = n + 1;
+
+	for (n = 0; n < 10; n++) {
+		printf("array[%d] = %d\t address: %p\n", n, *(pa + n), pa + n);
+	}
 }
