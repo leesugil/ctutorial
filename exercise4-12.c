@@ -11,7 +11,7 @@ void reverse(char s[]);
 
 main ()
 {
-	int n = -123023;
+	int n = -12345;
 	char s[MAXLINE];
 	int i;
 
