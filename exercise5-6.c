@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
+#include "./calc/getch.c"
 
 /* Rewrite appropriate programs from earlier chapters and exercises with pointers instead of array indexing. Good possibilities include getline, atoi, itoa, and their variants, reverse, and strindex and getop. */
 
@@ -158,7 +159,28 @@ void strindex_test(char *s, char *t, int lim) {
 }
 
 int getop(char *s) {
-	return 0;
+	extern int getch(void);
+	extern void ungetch(int);
+
+	int c;
+	while ((*s = c = getch()) == ' ' || c == '\t')
+		;
+	*(++s) = '\0';
+	if (!isdigit(c) && c != '.') {
+		printf("c: %c\n", c);
+		return c;	/* not a number */
+	}
+	s--;
+	if (isdigit(c))	/* collect integer part */
+		while (isdigit(*(++s) = c = getch()))
+			;
+	if (c == ',')	/* collect fraction part */
+		while (isdigit(*(++s) = c = getch()))
+			;
+	*s = '\0';
+	if (c != EOF)
+		ungetch(c);
+	return NUMBER;
 }
 
 void getop_test(char *s, int lim) {
