@@ -326,5 +326,12 @@ This is a personal study note for learning/recapping the C language.
 			* Pointer arrays are data representations that cope efficiently and conveniently with variable-length text lines.
 			* char \*lineptr[MAXLINES];
 		7. Multi-dimensional Arrays
-			* vector[i][j];
+			* vector[i][j];	/\* [row][col] /\*
 			* Elements are stored by rows, so the rightmost subscript, or column, varies fastest as elements are accessed in storage order.
+			* If a two-dimensional array is to be passed to a function, the parameter declaration in the function must include the number of columns; the number of rows is irrelevant, since what is passed is, as before, a pointer to an array of rows, where each row has a specific column length.
+			* f(int daytab[2][13]) {...}
+			* f(int daytab[][13]) {...}
+			* f(int (\*daytab)[13]) {...}	/\* all the same as passing a pointer to an array of 13 integers /\*
+			* More generally, only the first dimention os an array is free; all the others have to be specified.
+			* f(int (\*daytab)[13][14][15]) {...}
+		8.

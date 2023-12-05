@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "getline.h"
 
 /* getline2: get line into s, return length */
 int getline2(char s[], int lim)
