@@ -319,3 +319,12 @@ This is a personal study note for learning/recapping the C language.
 				* char \*pmessage = "now is the time";	/* a pointer \*/
 			* strcpy
 			* strcmp
+		6. Pointer Arrays; Points to Pointers
+			* Array of pointers to string constants
+			* In C, there is no single operation to compare/move string constants of various lengths.
+			* Multiple lines can be compared and ordered not by exchanging actual lines but sorting pointers to them.
+			* Pointer arrays are data representations that cope efficiently and conveniently with variable-length text lines.
+			* char \*lineptr[MAXLINES];
+		7. Multi-dimensional Arrays
+			* vector[i][j];
+			* Elements are stored by rows, so the rightmost subscript, or column, varies fastest as elements are accessed in storage order.
