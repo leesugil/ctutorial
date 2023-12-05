@@ -27,6 +27,14 @@ int day_of_year(int year, int month, int day)
 {
 	int i, leap;
 	leap = year%4 == 0 && year%100 != 0 || year%400 == 0;
+	if (month < 1 || 12 < month) {
+		printf("error: month out of range.\n");
+		return 0;
+	}
+	if (day < 1 || daytab[leap][month] < day) {
+		printf("error: day out of range.\n");
+		return 0;
+	}
 	for (i = 1; i < month; i++)
 		day += daytab[leap][i];
 	return day;
@@ -54,10 +62,17 @@ void month_day(int year, int yearday, int *pmonth, int *pday)
 	int i, leap;
 
 	leap = year%4 == 0 && year%100 != 0 || year%400 == 0;
-	for (i = 1; yearday > daytab[leap][i]; i++)
-		yearday -= daytab[leap][i];
-	*pmonth = i;
-	*pday = yearday;
+	if (yearday < 1 || 365 + leap < yearday) {
+		printf("error: yearday out of range.\n");
+		*pmonth = 0;
+		*pday = 0;
+	}
+	else {
+		for (i = 1; yearday > daytab[leap][i]; i++)
+			yearday -= daytab[leap][i];
+		*pmonth = i;
+		*pday = yearday;
+	}
 }
 
 void month_day_test(void)
