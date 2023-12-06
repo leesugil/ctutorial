@@ -334,4 +334,14 @@ This is a personal study note for learning/recapping the C language.
 			* f(int (\*daytab)[13]) {...}	/\* all the same as passing a pointer to an array of 13 integers /\*
 			* More generally, only the first dimention os an array is free; all the others have to be specified.
 			* f(int (\*daytab)[13][14][15]) {...}
-		8.
+		8. Initialization of Pointer Arrays
+			* char \*name[] = {
+				"Illegal month",
+				"January", February"
+			};
+			* The compiler counts the initializers and fills in the correct number.
+		9. Pointers vs. Multi-dimensional Arrays
+			* int a[10][20];
+			* int \*b[10];
+			* Each element of b need not point to a twenty-element vector.
+			* The most frequent use of arrays of pointers is to store character strings of diverse lengths.
