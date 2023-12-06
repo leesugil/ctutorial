@@ -345,3 +345,16 @@ This is a personal study note for learning/recapping the C language.
 			* int \*b[10];
 			* Each element of b need not point to a twenty-element vector.
 			* The most frequent use of arrays of pointers is to store character strings of diverse lengths.
+		10. Command-line Arguments
+			* In **environments** that **support C**, there is a way to **pass command-line arguments** or parameters **to a program** when it **begins executing**.
+			* When *main* is called, it's called with two arguments.
+				* argc	/\* argument count \*/
+				* argv	/\* argument vector \*/
+			* argc: the number of command-line arguments the program was invoked with.
+			* argv: a pointer to an array of arguments as character strings.
+			* echo hello, world!
+				* argc: 3
+				* argv[0]: "echo"
+				* argv[1]: "hello,"
+				* argv[argc-1]: "world!"
+			* An **argument** that begins with a **minus sign** introduces an **optional flag** or parameter.

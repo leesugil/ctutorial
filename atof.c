@@ -13,7 +13,7 @@ double atof(char s[])
 		i++;	/* skip sign character */
 	for (val = 0.0; isdigit(s[i]); i++)
 		val = 10.0 * val + (s[i] - '0');
-	if (s[i] = '.')
+	if (s[i] == '.')
 		i++;	/* skip decimal point character */
 	for (power = 1.0; isdigit(s[i]); i++) {
 		val = 10.0 * val + (s[i] - '0');
