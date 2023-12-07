@@ -18,7 +18,7 @@
 #include "getline.c"
 #include "atoi.c"
 
-#define TABSTEP	10
+#define TABSTEP	8
 #define	MAXLEN	1000	/* maximum character input size */
 
 void settabstop(int argc, char *argv[], int *tabstop);
@@ -35,7 +35,7 @@ main(int argc, char *argv[])
 	printf("current TABSTEP: %d\n", TABSTEP);
 	printf("%s\n", coln);
 	getline2(t, MAXLEN);
-	detab(s, t, tabstop);
+	entab(s, t, tabstop);
 	printf("%s\n%s\n", coln, s);
 }
 
@@ -49,7 +49,12 @@ void settabstop(int argc, char *argv[], int *tabstop)
 	*tabstop = 0;
 }
 
-/* detab: replaces tabs in the input with the proper number of blanks to spce to the next tab stop. */
+/* detab: replaces tabs in the input with the proper number of blanks to space to the next tab stop. */
+/* Example:
+ * TABSTEP: 5
+ * \tab\tcd e\tf
+ * 01234567890123456789
+ *      ab   cd e f */
 void detab(char *output, char *input, int *tabstop)
 {
 	int i, n, p = 0;	/* tracks current position count of the output */
@@ -68,12 +73,19 @@ void detab(char *output, char *input, int *tabstop)
 	}
 }
 
-/* spaces -> tabs + blanks */
+/* entab: replace strings of blanks by the minimum number of tabs and blanks to achieve the same spacing. */
+/* Example:
+ * TABSTEP: 5
+ * ab      cd  ef         g
+ * 012345678901234567890123456789
+ * ab\t ...cd..ef\t    ...g       */
+/* the code needs to be updated as each time tab is used, tab stops should be considered */
 void entab(char *output, char *input, int *tabstop)
 {
-	int spaces = 0;
+	int i, n, p = 0, spaces = 0;
 	while (*input++ != '\0') {
 		if (*(input-1) == ' ') {
+			/* accuulate spaces */
 			spaces++;
 			printf("(entab) detected space. spaces: %d\n", spaces);
 		}
@@ -86,20 +98,30 @@ void entab(char *output, char *input, int *tabstop)
 				/* store the tabs and spaces to *output before storing the current *input to the *output */
 				/* determing how many tabs to apply. */
 				printf("(entab) processing %d spaces\n", spaces);
+				n = TABSTEP - (p % TABSTEP);
+				if (n <= spaces) {
+					/* initial tab to the nearest next tab stop */
+					*output++ = '\t';
+					p += n;
+					spaces -= n;
+					printf("(entab) applied a tab, remaining spaces: %d, current position: %d\n", spaces, p);
+				}
 				while (spaces >= TABSTEP) {
 					*output++ = '\t';
+					p += TABSTEP;
 					spaces -= TABSTEP;
-					printf("(entab) applied a tab, remaining spaces: %d\n", spaces);
+					printf("(entab) applied a tab, remaining spaces: %d, current position: %d\n", spaces, p);
 				}
 				while (spaces-- > 0) {
 					*output++ = ' ';
-					printf("(entab) applied a space, remaining spaces: %d\n", spaces);
+					p++;
+					printf("(entab) applied a space, remaining spaces: %d, surrent position: %d\n", spaces, p);
 				}
 				spaces = 0;
 			}
 			*output++ = *(input-1);
-			printf("(entab) registered a character '%c'\n", *(input-1));
+			p++;
+			printf("(entab) registered a character '%c' at position %d\n", *(input-1), p-1);
 		}
 	}
 }
-
