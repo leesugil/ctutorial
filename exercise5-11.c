@@ -18,16 +18,16 @@
 #include "getline.c"
 #include "atoi.c"
 
-#define TABSTEP	3
+#define TABSTEP	10
 #define	MAXLEN	1000	/* maximum character input size */
 
 void settabstop(int argc, char *argv[], int *tabstop);
-void entab(char *output, char *input, int *tabstop);
 void detab(char *output, char *input, int *tabstop);
+void entab(char *output, char *input, int *tabstop);
 
 main(int argc, char *argv[])
 {
-	char coln[] = "123456789012345678901234567890";
+	char coln[] = "012345678901234567890123456789";
 	int tabstop[argc - 1];
 	settabstop(argc, argv, tabstop);
 
@@ -35,14 +35,37 @@ main(int argc, char *argv[])
 	printf("current TABSTEP: %d\n", TABSTEP);
 	printf("%s\n", coln);
 	getline2(t, MAXLEN);
-	entab(s, t, tabstop);
+	detab(s, t, tabstop);
 	printf("%s\n%s\n", coln, s);
 }
 
 void settabstop(int argc, char *argv[], int *tabstop)
 {
-	while (--argc > 0)
-		*(tabstop++) = atoi(*++argv);
+	if (argc > 1)
+		while (--argc > 0)
+			*(tabstop++) = atoi(*++argv);
+	else
+		*tabstop++ = (TABSTEP != 0) ? TABSTEP : 7;
+	*tabstop = 0;
+}
+
+/* detab: replaces tabs in the input with the proper number of blanks to spce to the next tab stop. */
+void detab(char *output, char *input, int *tabstop)
+{
+	int i, n, p = 0;	/* tracks current position count of the output */
+	while (*input++ != '\0') {
+		if (*(input-1) == '\t') {
+			/* at the current position p, move to the neariest next tab stop */
+			n = TABSTEP - (p % TABSTEP);
+			printf("(detab) tab detected at position %d, spacing %d to the next tab stop.\n", p, n);
+			for (i = 0; i < n; i++, p++)
+				*output++ = ' ';
+		}
+		else {
+			*output++ = *(input-1);
+			p++;
+		}
+	}
 }
 
 /* spaces -> tabs + blanks */
@@ -80,7 +103,3 @@ void entab(char *output, char *input, int *tabstop)
 	}
 }
 
-/* tabs -> spaces */
-void detab(char *output, char *input, int *tabstop)
-{
-}
