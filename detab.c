@@ -1,29 +1,21 @@
-#define	TABSTEP	6	/* minimum tab spacing size */
-#define	MAXLEN	1000	/* maximum character input size */
-
-void detab(char output[], char input[])
+/* detab: replaces tabs in the input with the proper number of blanks to space to the next tab stop. */
+/* Example:
+ * TABSTEP: 5
+ * \tab\tcd e\tf
+ * 01234567890123456789
+ *      ab   cd e f */
+void detab(char *output, char *input, int *tabstop)
 {
-	int i, j;
-
-	j = 0;
-	for (i = 0; input[i] != '\0'; ++i) {
-		if (j < MAXLEN - 1) {
-			if (input[i] == '\t') {
-				/* detab here */
-				output[j] = ' ';
-				++j;
-				while (j % TABSTEP != 0) {
-					if (j < MAXLEN - 1) {
-						output[j] = ' ';
-						++j;
-					}
-				}
-			}
-			else {
-				output[j] = input[i];
-				++j;
-			}
+	int i, n, p = 0;	/* tracks current position count of the output */
+	while (*input++ != '\0') {
+		if (*(input-1) == '\t') {
+			n = TABSTEP - (p % TABSTEP);
+			for (i = 0; i < n; i++, p++)
+				*output++ = ' ';
+		}
+		else {
+			*output++ = *(input-1);
+			p++;
 		}
 	}
-	output[j] = '\0';
 }
