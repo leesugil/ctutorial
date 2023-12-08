@@ -35,7 +35,7 @@ main(int argc, char *argv[])
 	printf("current TABSTEP: %d\n", TABSTEP);
 	printf("%s\n", coln);
 	getline2(t, MAXLEN);
-	entab(s, t, tabstop);
+	detab(s, t, tabstop);
 	printf("%s\n%s\n", coln, s);
 }
 
@@ -57,18 +57,31 @@ void settabstop(int argc, char *argv[], int *tabstop)
  *      ab   cd e f */
 void detab(char *output, char *input, int *tabstop)
 {
-	int i, n, p = 0;	/* tracks current position count of the output */
+	int i, n, p = 0, q = 0;	/* tracks current position count of the output */
 	while (*input++ != '\0') {
 		if (*(input-1) == '\t') {
 			/* at the current position p, move to the neariest next tab stop */
-			n = TABSTEP - (p % TABSTEP);
-			printf("(detab) tab detected at position %d, spacing %d to the next tab stop.\n", p, n);
-			for (i = 0; i < n; i++, p++)
+			/* the next tab stop q is calculated based on tabstop */
+			n = q - p;
+			printf("(detab) tab detected at position %d, spacing n: %d to the next tab stop at %d.\n", p, n, q);
+			for (i = 0; i < n; i++, p++) {
 				*output++ = ' ';
+			}
+			/* p == q at this point */
+			if (*tabstop != 0)
+				q += *tabstop++;
+			else
+				q += *(tabstop - 1);
 		}
 		else {
 			*output++ = *(input-1);
 			p++;
+			if (p >= q) {
+				if (*tabstop != 0)
+					q += *tabstop++;
+				else
+					q += *(tabstop - 1);
+			}
 		}
 	}
 }
