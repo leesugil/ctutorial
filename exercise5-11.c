@@ -28,7 +28,7 @@ void entab(char *output, char *input, int *tabstop);
 main(int argc, char *argv[])
 {
 	char coln[] = "012345678901234567890123456789";
-	int tabstop[argc - 1];
+	int tabstop[MAXLEN];
 	settabstop(argc, argv, tabstop);
 
 	char s[MAXLEN], t[MAXLEN];
@@ -41,11 +41,15 @@ main(int argc, char *argv[])
 
 void settabstop(int argc, char *argv[], int *tabstop)
 {
+	argv++;
 	if (argc > 1)
-		while (--argc > 0)
-			*(tabstop++) = atoi(*++argv);
+		while (--argc > 0) {
+			if (atoi(*(argv - 1)) < atoi(*argv))
+				*tabstop++ = atoi(*argv);
+			argv++;
+		}
 	else
-		*tabstop++ = (TABSTEP != 0) ? TABSTEP : 7;
+		*tabstop++ = (TABSTEP != 0) ? TABSTEP : 8;
 	*tabstop = 0;
 }
 
@@ -64,26 +68,29 @@ void detab(char *output, char *input, int *tabstop)
 			/* the next tab stop q is calculated based on tabstop */
 			n = q - p;
 			printf("(detab) tab detected at position %d, spacing n: %d to the next tab stop at %d.\n", p, n, q);
-			for (i = 0; i < n; i++, p++) {
+			for (i = 0; i < n; i++, p++)
 				*output++ = ' ';
-			}
 			/* p == q at this point */
 			if (*tabstop != 0)
-				q += *tabstop++;
+				q = *tabstop++;
 			else
-				q += *(tabstop - 1);
+				q += TABSTEP;
+			printf("(detab) the next tab stop is at %d\n", q);
 		}
 		else {
+			printf("(detab) registering '%c'\n", *(input-1));
 			*output++ = *(input-1);
 			p++;
 			if (p >= q) {
 				if (*tabstop != 0)
-					q += *tabstop++;
+					q = *tabstop++;
 				else
-					q += *(tabstop - 1);
+					q += TABSTEP;
+			printf("(detab) the next tab stop is at %d\n", q);
 			}
 		}
 	}
+	*output = '\0';
 }
 
 /* entab: replace strings of blanks by the minimum number of tabs and blanks to achieve the same spacing. */
