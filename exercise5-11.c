@@ -18,8 +18,8 @@
 #include "getline.c"
 #include "atoi.c"
 
-#define TABSTEP	5
-#define	MAXLEN	10	/* maximum character input size */
+#define TABSTEP	8
+#define	MAXLEN	1000	/* maximum character input size */
 
 void settabstop(int argc, char *argv[], int *tabstop);
 void detab(char *output, char *input, int *tabstop);
@@ -35,28 +35,23 @@ main(int argc, char *argv[])
 	printf("current TABSTEP: %d\n", TABSTEP);
 	printf("%s\n", coln);
 	getline2(t, MAXLEN);
-	entab(s, t, tabstop);
+	detab(s, t, tabstop);
 	printf("%s\n%s\n", coln, s);
 }
 
+/* settabstop: takes arguments as tab stops, otherwise setting to the default TABSTEP */
 void settabstop(int argc, char *argv[], int *tabstop)
 {
-	printf("(settabstop) tab stops: ");
 	argv++;
 	if (argc > 1)
 		while (--argc > 0) {
-			if (atoi(*(argv - 1)) < atoi(*argv)) {
+			if (atoi(*(argv - 1)) < atoi(*argv))
 				*tabstop++ = atoi(*argv);
-				printf("%d ", *(tabstop - 1));
-			}
 			argv++;
 		}
-	else {
+	else
 		*tabstop++ = (TABSTEP != 0) ? TABSTEP : 8;
-		printf("%d ", *(tabstop - 1));
-	}
 	*tabstop = 0;
-	printf("%d\n", *tabstop);
 }
 
 /* detab: replaces tabs in the input with the proper number of blanks to space to the next tab stop. */
@@ -67,6 +62,35 @@ void settabstop(int argc, char *argv[], int *tabstop)
  *      ab   cd e f */
 void detab(char *output, char *input, int *tabstop)
 {
+	int p = 0;	/* current output position */
+	int q = 0;	/* next tab stop position */
+	int sp = 0;	/* spaces */
+
+	printf("(detab) initial tabstop: %d\n", *tabstop);
+	while (*input++ != '\0' && p <= MAXLEN) {
+		/* update the next tab stop position */
+		while (p + sp >= q)
+			q = (*tabstop != 0) ? *tabstop++ : q + *(tabstop - 1);
+		if (*(input-1) == ' ')
+			sp += 1;
+		else if (*(input-1) == '\t')
+			sp += q - p;
+		else {
+			printf("(detab) p: %d, sp: %d, q: %d, c: '%c'\n", p, sp, q, *(input-1));
+			if (sp > 0) {
+				/* process space & tab here */
+				while (sp-- > 0) {
+					*output++ = ' ';
+					p++;
+				}
+				if (++sp != 0)
+					printf("(detab) error: %d spaces remaining after processing!\n", sp);
+			}
+			*output++ = *(input - 1);
+			p++;
+		}
+	}
+	*output = '\0';
 }
 
 /* entab: replace strings of blanks by the minimum number of tabs and blanks to achieve the same spacing. */
