@@ -35,7 +35,7 @@ main(int argc, char *argv[])
 	printf("current TABSTEP: %d\n", TABSTEP);
 	printf("%s\n", coln);
 	getline2(t, MAXLEN);
-	detab(s, t, tabstop);
+	entab(s, t, tabstop);
 	printf("%s\n%s\n", coln, s);
 }
 
@@ -107,4 +107,50 @@ void detab(char *output, char *input, int *tabstop)
  * a\t ..b\t.....cd\t  ..e        */
 void entab(char *output, char *input, int *tabstop)
 {
+	char *p = output;	/* output record */
+	int *q = tabstop;	/* tab stops when analyzing input */
+	int *r = tabstop;	/* tab stops when recording into output */
+	int pos;
+	int sp = 0;
+	char c;
+
+	while ((c = *input++) != '\0' && (p - output) < MAXLEN) {
+		/* update q */
+		/* update r */
+		/* if ' ', then sp++, */
+		/* else if '\t', then update sp to q, */
+		 /* else update p. */
+		 /* if sp > 0, then apply sp first. */
+		/* position: p - output */
+		pos = p - output;
+		/* update q */
+		if (pos + sp >= *q) {
+			if (*(q+1))
+				q += 1;
+			else
+				*q += TABSTEP;
+		}
+		/* update r */
+		if (pos >= *r) {
+			if (*(r+1))
+				r += 1;
+			else
+				*r += TABSTEP;
+		}
+		/* add spaces with q */
+		if (c == ' ')
+			sp++;
+		else if (c == '\t') {
+			sp += *q - (pos + sp);
+		}
+		else {
+			/* c == char or '\n' */
+			/* record c in p */
+			if (sp > 0) {
+				/* process spaces with r */
+			}
+			*p++ = c;
+		}
+	}
+	*p = '\0';
 }
