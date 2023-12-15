@@ -107,31 +107,30 @@ void detab(char *output, char *input, int *tabstop)
  * a\t ..b\t.....cd\t  ..e        */
 void entab(char *output, char *input, int *tabstop)
 {
-	char *p = output;	/* output record */
 	int *q = tabstop;	/* tab stops when analyzing input */
 	int *r = tabstop;	/* tab stops when recording into output */
-	int pos;
-	int sp = 0;
+	int p = 0;	/* position index to compare with *q, *r */
+	int sp = 0;	/* for p + sp */
 	char c;
+	char *input2 = output;	/* when spaces are replaced with tabs in output, we use detab to apply the tab stops using spaces given by detab */
 
-	while ((c = *input++) != '\0' && (p - output) < MAXLEN) {
-		/* update q */
-		/* update r */
+	while ((c = *input++) != '\0' && p < MAXLEN) {
+		/* update q with respect to p, sp */
+		/* update r with respect to p, sp */
 		/* if ' ', then sp++, */
 		/* else if '\t', then update sp to q, */
 		 /* else update p. */
 		 /* if sp > 0, then apply sp first. */
 		/* position: p - output */
-		pos = p - output;
 		/* update q */
-		if (pos + sp >= *q) {
+		if (p + sp >= *q) {	/* (1) */
 			if (*(q+1))
 				q += 1;
 			else
 				*q += TABSTEP;
 		}
 		/* update r */
-		if (pos >= *r) {
+		if (p >= *r) {	/* (2) */
 			if (*(r+1))
 				r += 1;
 			else
@@ -141,16 +140,47 @@ void entab(char *output, char *input, int *tabstop)
 		if (c == ' ')
 			sp++;
 		else if (c == '\t') {
-			sp += *q - (pos + sp);
+			sp += *q - (p + sp);	/* by (1) and this, *q > p + sp always */
 		}
 		else {
 			/* c == char or '\n' */
 			/* record c in p */
 			if (sp > 0) {
 				/* process spaces with r */
+				/* if adding a ' ', *output++, p++, and sp-- */
+				while (p + sp >= *r) {
+					printf("(entab) c: %c, p: %d, sp: %d, *r: %d\n", c, p, sp, *r);
+					*output++ = '\t';
+					sp -= *r - p;
+					p = *r;
+					if (*(r+1))
+						r++;
+					else
+						*r += TABSTEP;
+				}
+				while (sp-- > 0) {
+					printf("(entab) c: %c, p: %d, sp: %d, *r: %d\n", c, p, sp, *r);
+					*output++ = ' ';
+					p++;
+				}
+				if (!(sp + 1)) {
+					printf("(entab) c: %c, p: %d, sp: %d, *r: %d\n", c, p, sp, *r);
+					sp = 0;
+				}
+				else
+					printf("(entab) error, sp: %d is not balanced out at position p: %d.\n", sp, p);
 			}
-			*p++ = c;
+			printf("(entab) c: %c, p: %d, sp: %d, *r: %d\n", c, p, sp, *r);
+			*output++ = c;
+			p++;
 		}
 	}
-	*p = '\0';
+	*output = '\0';
+
+	char tmp[MAXLEN];
+	int i;
+	for (i = 0; input2[i] != '\0'; i++)
+		tmp[i] = input2[i];
+	tmp[i] = '\0';
+	detab(output, tmp, tabstop);
 }
