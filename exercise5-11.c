@@ -70,7 +70,7 @@ void detab(char *output, char *input, int *tabstop)
 	while (*input++ != '\0' && p <= MAXLEN) {
 		/* update the next tab stop position */
 		while (p + sp >= q)
-			q = (*tabstop != 0) ? *tabstop++ : q + *(tabstop - 1);
+			q = (*tabstop != 0) ? *tabstop++ : q + TABSTEP;
 		if (*(input-1) == ' ')
 			sp += 1;
 		else if (*(input-1) == '\t')
@@ -177,10 +177,11 @@ void entab(char *output, char *input, int *tabstop)
 	}
 	*output = '\0';
 
+	/* intput2 points to the beginning of the original output */
 	char tmp[MAXLEN];
 	int i;
 	for (i = 0; input2[i] != '\0'; i++)
 		tmp[i] = input2[i];
 	tmp[i] = '\0';
-	detab(output, tmp, tabstop);
+	detab(input2, tmp, tabstop);
 }
