@@ -29,7 +29,7 @@ main(int argc, char *argv[])
 	printf("current tabstep: %d\n", tabstep);
 	printf("%s\n", coln);
 	getline2(t, MAXLEN);
-	detab(s, t, tabstop);
+	entab(s, t, tabstop);
 	printf("%s\n%s\n", coln, s);
 }
 
@@ -46,7 +46,10 @@ void settabstop(int argc, char *argv[], int *tabstop)
 			if (c == '-') {
 				printf("(settabstop) '-' detected\n");
 				*tabstop++ = -1 * atoi((*argv++));
-				c = (*argv)[0];
+				argc--;
+				/* core dump occurs when there is no *argv */
+				if (argc > 1)
+					c = (*argv)[0];
 			}
 			if (c == '+') {
 				printf("(settabstop) '+' detected\n");
@@ -161,10 +164,11 @@ void entab(char *output, char *input, int *tabstop)
 	}
 	*output = '\0';
 
+	/* input2 points to the original starting position of output */
 	char tmp[MAXLEN];
 	int i;
 	for (i = 0; input2[i] != '\0'; i++)
 		tmp[i] = input2[i];
 	tmp[i] = '\0';
-	detab(output, tmp, tabstop);
+	detab(input2, tmp, tabstop);
 }
