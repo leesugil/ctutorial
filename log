@@ -1,0 +1,94 @@
+In file included from sort2.c:6:
+./readlines.c:6:11: error: redefinition of 'nlines'
+        int len, nlines;
+                 ^
+./readlines.c:4:36: note: previous definition is here
+int readlines(char *lineptr[], int nlines)
+                                   ^
+./readlines.c:7:16: error: use of undeclared identifier 'MAXLEN'
+        char *p, line[MAXLEN];
+                      ^
+./readlines.c:10:24: error: use of undeclared identifier 'line'
+        while ((len = getline(line, MAXLEN)) > 0)
+                              ^
+./readlines.c:10:30: error: use of undeclared identifier 'MAXLEN'
+        while ((len = getline(line, MAXLEN)) > 0)
+                                    ^
+./readlines.c:11:33: error: implicit declaration of function 'alloc' [-Werror,-Wimplicit-function-declaration]
+                if (nlines >= maxlines || p = alloc(len) == NULL)
+                                              ^
+./readlines.c:11:44: warning: comparison between pointer and integer ('int' and 'void *') [-Wpointer-integer-compare]
+                if (nlines >= maxlines || p = alloc(len) == NULL)
+                                              ~~~~~~~~~~ ^  ~~~~
+./readlines.c:11:31: warning: using the result of an assignment as a condition without parentheses [-Wparentheses]
+                if (nlines >= maxlines || p = alloc(len) == NULL)
+                    ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~
+./readlines.c:11:31: note: place parentheses around the assignment to silence this warning
+                if (nlines >= maxlines || p = alloc(len) == NULL)
+                                            ^
+                    (                                           )
+./readlines.c:11:31: note: use '==' to turn this assignment into an equality comparison
+                if (nlines >= maxlines || p = alloc(len) == NULL)
+                                            ^
+                                            ==
+./readlines.c:11:17: error: use of undeclared identifier 'maxlines'
+                if (nlines >= maxlines || p = alloc(len) == NULL)
+                              ^
+./readlines.c:11:44: warning: comparison between pointer and integer ('int' and 'void *') [-Wpointer-integer-compare]
+                if (nlines >= maxlines || p = alloc(len) == NULL)
+                                              ~~~~~~~~~~ ^  ~~~~
+./readlines.c:14:4: error: use of undeclared identifier 'line'
+                        line[len-1] = '\0';     /* delete newline */
+                        ^
+./readlines.c:15:14: error: use of undeclared identifier 'line'; did you mean 'len'?
+                        strcpy(p, line);
+                                  ^~~~
+                                  len
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/secure/_string.h:84:33: note: expanded from macro 'strcpy'
+                __builtin___strcpy_chk (dest, __VA_ARGS__, __darwin_obsz (dest))
+                                              ^
+./readlines.c:6:6: note: 'len' declared here
+        int len, nlines;
+            ^
+In file included from sort2.c:8:
+./qsort.c:2:6: error: conflicting types for 'qsort'
+void qsort(int v[], int left, int right)
+     ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/stdlib.h:160:7: note: previous declaration is here
+void     qsort(void *__base, size_t __nel, size_t __width,
+         ^
+In file included from sort2.c:8:
+./qsort.c:5:7: error: conflicting types for 'swap'
+        void swap(int v[], int i, int j);
+             ^
+./swap.c:2:6: note: previous definition is here
+void swap(void *v[], int i, int j)
+     ^
+In file included from sort2.c:8:
+./qsort.c:14:23: error: too few arguments to function call, expected 4, have 3
+        qsort(v, left, last-1);
+        ~~~~~                ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/stdlib.h:160:7: note: 'qsort' declared here
+void     qsort(void *__base, size_t __nel, size_t __width,
+         ^
+In file included from sort2.c:8:
+./qsort.c:15:24: error: too few arguments to function call, expected 4, have 3
+        qsort(v, last+1, right);
+        ~~~~~                 ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/stdlib.h:160:7: note: 'qsort' declared here
+void     qsort(void *__base, size_t __nel, size_t __width,
+         ^
+In file included from sort2.c:8:
+./qsort.c:41:7: error: conflicting types for 'swap2'
+        void swap2(void *v[], int, int);
+             ^
+./qsort.c:22:7: note: previous declaration is here
+        void swap2(char *v[], int i, int j);
+             ^
+./qsort.c:56:6: error: conflicting types for 'swap'
+void swap(int v[], int i, int j)
+     ^
+./swap.c:2:6: note: previous definition is here
+void swap(void *v[], int i, int j)
+     ^
+3 warnings and 14 errors generated.
