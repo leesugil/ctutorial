@@ -34,7 +34,7 @@ void qsort3(void *v[], int left, int right, int (*comp)(void *, void *))
 	qsort3(v, last+1, right, comp);
 }
 
-/* qsort4: sort v[left]...v[right] into increasing order. provides reverse sorting. */
+/* qsort4: sort v[left]...v[right] into increasing order. upgrades qsort3. provides reverse sorting. */
 void qsort4(void *v[], int left, int right, int reverse, int (*comp)(void *, void *))
 {
 	int i, r, last;
@@ -52,3 +52,19 @@ void qsort4(void *v[], int left, int right, int reverse, int (*comp)(void *, voi
 	qsort4(v, last+1, right, reverse, comp);
 }
 
+/* qsort5: sort v[left]...v[right] into increasing order. accepts comparion function, reverse, fold. upgrades qsort4. */
+void qsort5(void *v[], int left, int right, int reverse, int fold, int (*comp)(void *, void *, int, int))
+{
+	int i, last;
+
+	if (left >= right)
+		return;
+	swap3(v, left, (left + right) / 2);
+	last = left;
+	for (i = left+1; i <= right; i++)
+		if ((*comp)(v[i], v[left], reverse, fold) < 0)
+			swap3(v, ++last, i);
+	swap3(v, left, last);
+	qsort5(v, left, last-1, reverse, fold, comp);
+	qsort5(v, last+1, right, reverse, fold, comp);
+}
