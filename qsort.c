@@ -59,16 +59,12 @@ void qsort5(void *v[], int left, int right, int reverse, int fold, int (*comp)(v
 
 	if (left >= right)
 		return;
-	printf("(qsort5) initial swap left: %d, \"%s\" and mid: %d, \"%s\"\n", left, (char *) v[left], (left + right) / 2, (char *) v[(left + right) / 2]);
-	swap3(v, left, (left + right) / 2);
+	if ((*comp)(v[left], v[(left + right) / 2], reverse, fold) > 0)
+		swap3(v, left, (left + right) / 2);
 	last = left;
 	for (i = left+1; i <= right; i++)
-		if ((d = (*comp)(v[i], v[left], reverse, fold)) < 0) {
-			printf("(qsort5) d: %d, swapping\n", d);
-			printf("(qsort5) comparison swap last+1: %d, \"%s\" and i: %d, \"%s\"\n", last+1, (char *) v[last+1], i, (char *) v[i]);
+		if ((d = (*comp)(v[i], v[left], reverse, fold)) < 0)
 			swap3(v, ++last, i);
-		}
-	printf("(qsort5) final swap left: %d, \"%s\" and last: %d, \"%s\"\n", left, (char *) v[left], last, (char *) v[last]);
 	swap3(v, left, last);
 	qsort5(v, left, last-1, reverse, fold, comp);
 	qsort5(v, last+1, right, reverse, fold, comp);

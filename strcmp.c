@@ -15,18 +15,10 @@ int strcmp3(char *s, char *t, int reverse, int fold)
 	 * fold: 1 if fold */
 	int c, output;
 
-	for ( ; (c = *s - *t) == 0 || c == ('a' - 'A') * fold || c == ('A' - 'a') * fold; s++, t++) {
-		printf("(strcmp3) comparing %c, %c\n", *s, *t);
-		if (c == 'a' - 'A' || c == 'A' - 'a')
-			printf("(strcmp3) %c == %c\n", *s, *t);
-		if (*s == '\0') {
-			printf("(strcmp3) match! returning 0\n");
+	for ( ; (c = *s - *t) == 0 || c == ('a' - 'A') * fold || c == ('A' - 'a') * fold; s++, t++)
+		if (*s == '\0')
 			return 0;
-		}
-	}
-	printf("(strcmp3) mismatch! diff: %c, %c\n", *s, *t);
 
 	output = (*s - *t) * (1 - 2 * reverse);
-	printf("(strcmp3) returning %d\n", output);
 	return output;
 }

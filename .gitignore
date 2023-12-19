@@ -1,0 +1,8 @@
+# Ignore compiled files
+*.out
+
+# Ignore log files
+*.log
+
+# Ignore temporary files
+tmp
