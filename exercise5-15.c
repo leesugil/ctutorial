@@ -31,9 +31,9 @@ main (int argc, char *argv[])
 		}
 	}
 
-	printf("%s comparison\n", (numeric ? "numeric" : "lexiconical"));
-	printf("%s order\n", (reverse ? "descending" : "ascending"));
-	printf("case %ssensitive\n", (fold ? "in" : ""));
+	printf("%s comparison\n", (numeric ? "NUMERIC" : "lexiconical"));
+	printf("%s order\n", (reverse ? "DESCENDING" : "ascending"));
+	printf("case %ssensitive\n", (fold ? "IN" : ""));
 
 	if ((nlines = readlines(lineptr, MAXLINES)) >= 0) {
 		qsort5((void**) lineptr, 0, nlines-1, reverse, fold, (int (*)(void*, void*, int, int)) (numeric ? numcmp2 : strcmp3));
