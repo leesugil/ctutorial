@@ -1,48 +1,166 @@
-/* Add the -d ("directory order") option, which makes comparisons only on letters, numbers, and blanks. Make sure it works in conjunction with -f */
+/* Add the -d ("directory order") option, which makes comparisons only on letters, numbers and blanks. Make sure it works in conjunction with -f. */
 
 #include <stdio.h>
 #include <string.h>
-#include "strcmp.c"
-#include "numcmp.c"
-#include "readlines.c"
-#include "writelines.c"
-#include "qsort.c"
+#include <ctype.h>
+#include <stdlib.h>
+#include "getline.c"
+#include "alloc.c"
 
-#define MAXLINES 5000	/* max #lines to be sorted */
-char *lineptr[MAXLINES];	/* pointers to text lines */
+#define NUMERIC	1	/* 0001 numeric sort */
+#define	DECR	2	/* 0010 sort in decreasing order */
+#define FOLD	4	/* 0100 fold upper and lower cases */
+#define DIREC	8	/* 1000 directory order */
+#define LINES	100	/* max # of lines to be sorted */
+#define runqsort(x) (qsort2((void **) lineptr, 0, nlines-1, (int (*)(void *, void *)) x))	/* macro for qsort2 algorithm */
+
+int charcmp(char *, char *);
+int numcmp(char *, char *);
+int dircmp(char *, char *);
+int readlines(char *lineptr[], int maxlines);
+void qsort2(void *v[], int left, int right, int (*comp)(void *, void *));
+void writelines(char *lineptr[], int nlines, int order);
+
+static char option = 0;
 
 /* sort input lines */
-main (int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-	int nlines;	/* number of input lines read */
-	int numeric = 0;	/* 1 if numeric sort */
-	int reverse = 0;	/* 1 if sorting in reverse order */
-	int fold = 0;	/* 1 if fold upper and lower case together */
-	int directory = 0;	/* 1 if directory order */
+	char *lineptr[LINES];
+	int nlines;
+	int c, rc = 0;
 
-	if (argc > 1) {
-		int i;
-		for (i = 1; i < argc; i++) {
-			if (numeric == 0 && !strcmp2(argv[i], "-n"))
-				numeric = 1;
-			if (reverse == 0 && !strcmp2(argv[i], "-r"))
-				reverse = 1;
-			if (fold == 0 && !strcmp2(argv[i], "-f"))
-				fold = 1;
+	while (--argc > 0 && (*++argv)[0] == '-')
+		while ((c = *++argv[0]))
+			switch (c) {
+				case 'd':	/* directory order */
+					option |= DIREC;
+					break;
+				case 'f':	/* fold upper and lower cases */
+					option |= FOLD;
+					break;
+				case 'n':	/* numeric sort */
+					option |= NUMERIC;
+					break;
+				case 'r':	/* sort in decreasing order */
+					option |= DECR;
+					break;
+				default:
+					printf("sort: illegal option %c\n", c);
+					argc = 1;
+					rc = -1;
+					break;
+			}
+	if (argc)
+		printf("Usage: <codename> -fnrd \n");
+	else {
+		if ((nlines = readlines(lineptr, LINES)) > 0) {
+			if (option & NUMERIC)
+				runqsort(numcmp);
+			else if (option & FOLD)
+				runqsort(charcmp);
+			else
+				runqsort(strcmp);
+			writelines(lineptr, nlines, option & DECR);
+		} else {
+			printf("input too big to sort\n");
+			rc = -1;
 		}
 	}
-
-	printf("%s comparison\n", (numeric ? "NUMERIC" : "lexiconical"));
-	printf("%s order\n", (reverse ? "DESCENDING" : "ascending"));
-	printf("case %ssensitive\n", (fold ? "IN" : ""));
-
-	if ((nlines = readlines(lineptr, MAXLINES)) >= 0) {
-		qsort5((void**) lineptr, 0, nlines-1, reverse, fold, (int (*)(void*, void*, int, int)) (numeric ? numcmp2 : strcmp3));
-		writelines(lineptr, nlines);
-		return 0;
-	} else {
-		printf("input too big to sort\n");
-		return 1;
-	}
+	return rc;
 }
 
+/* qsort2: sort v[left]...v[right] into increasing order */
+void qsort2(void *v[], int left, int right, int (*comp)(void *, void *))
+{
+	int i, last, mid;
+
+	void swap(void *v[], int, int);
+
+	if (left >= right)
+		return;
+	mid = (left + right) / 2;
+	if ((*comp)(v[left], v[right]) > 0)
+		swap(v, left, mid);
+	last = left;
+	for (i = left+1; i <= right; i++)
+		if ((*comp)(v[i], v[left]) < 0)
+			swap(v, ++last, i);
+	swap(v, left, last);
+	qsort2(v, left, last-1, comp);
+	qsort2(v, last+1, right, comp);
+}
+
+
+#define MAXLEN 1000
+/* readlines: read input lines */
+int readlines(char *lineptr[], int maxlines)
+{
+	int len, nlines;
+	char *p, line[MAXLEN];
+
+	nlines = 0;
+	while ((len = getline2(line, MAXLEN)) > 0)
+		if (nlines >= maxlines || (p = alloc(len)) == NULL)
+			return -1;
+		else {
+			line[len-1] = '\0';
+			strcpy(p, line);
+			lineptr[nlines++] = p;
+		}
+	return nlines;
+}
+
+/* writelines: write output lines */
+void writelines(char *lineptr[], int nlines, int decr)
+{
+	int i;
+
+	if (decr)
+		for (i = nlines-1; i >= 0; i--)
+			printf("%s\n", lineptr[i]);
+	else
+		for (i = 0; i < nlines; i++)
+			printf("%s\n", lineptr[i]);
+}
+
+/* numcmp: compare s1 and s2 numerically */
+int numcmp(char *s1, char *s2)
+{
+	double v1, v2;
+
+	v1 = atof(s1);
+	v2 = atof(s2);
+	if (v1 < v2)
+		return -1;
+	else if (v1 > v2)
+		return 1;
+	else
+		return 0;
+}
+
+void swap(void *v[], int i, int j)
+{
+	void *temp;
+
+	temp = v[i];
+	v[i] = v[j];
+	v[j] = temp;
+}
+
+/* charcmp: return <0 if s<t, 0 if s==t, >0 if s>t */
+int charcmp(char *s, char *t)
+{
+	for ( ; tolower(*s) == tolower(*t); s++, t++)
+		if (*s == '\0')
+			return 0;
+	return tolower(*s) - tolower(*t);
+}
+
+/* dircmp: compares only letters, numbers, and blanks.
+ * compatiable with -f
+ * returns <0 if s<t, 0 if s==t, >0 if s>t */
+int dircmp(char *s, char *t)
+{
+	return *s - *t;
+}
