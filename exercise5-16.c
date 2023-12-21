@@ -164,3 +164,9 @@ int dircmp(char *s, char *t)
 {
 	return *s - *t;
 }
+
+/* strcmp2: returns <0 if s<t, 0 if s==t, >0 if s>t
+ * accepts option for -fd */
+int strcmp2(char *s, char *t, int option)
+{
+}
