@@ -60,8 +60,6 @@ int main(int argc, char *argv[])
 		if ((nlines = readlines(lineptr, LINES)) > 0) {
 			if (option & NUMERIC)
 				runqsort(numcmp);
-			else if (option & FOLD)
-				runqsort3(strcmp2);
 			else
 				runqsort3(strcmp2);
 			writelines(lineptr, nlines, option & DECR);
@@ -197,7 +195,9 @@ int strcmp2(char *s, char *t, int option)
 	int f = option & FOLD;	/* 1 if fold */
 	int d = option & DIREC;	/* 1 if directory order */
 
-	for ((a = d ? ((isalnum(*s) || *s == ' ' || *s == '\0') ? (*s) : (' ')) : (*s)), b = (d ? ((isalnum(*t) || *t == ' ' || *t == '\0') ? (*t) : (' ')) : (*t)); f ? (tolower(a) == tolower(b)) : (a == b); s++, t++, a = d ? ((isalnum(*s) || *s == ' ' || *s == '\0') ? (*s) : (' ')) : (*s), b = d ? ((isalnum(*t) || *t == ' ' || *t == '\0') ? (*t) : (' ')) : (*t))
+	for ((a = d ? ((isalnum(*s) || *s == ' ' || *s == '\0') ? (*s) : (' ')) : (*s)), b = (d ? ((isalnum(*t) || *t == ' ' || *t == '\0') ? (*t) : (' ')) : (*t));\
+			f ? (tolower(a) == tolower(b)) : (a == b);\
+			s++, t++, a = d ? ((isalnum(*s) || *s == ' ' || *s == '\0') ? (*s) : (' ')) : (*s), b = d ? ((isalnum(*t) || *t == ' ' || *t == '\0') ? (*t) : (' ')) : (*t))
 		if (*s == '\0')
 			return 0;
 	return (f) ? (tolower(*s) - tolower(*t)) : (*s - *t);
