@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
 		printf("Usage: <codename> -fnrd -fnrd ... CSV support only\n");
 	else {
 		if ((nlines = readlines(lineptr, LINES)) > 0) {
-			while (field >= 0) {
+			while (field >= 0) { /* this is where a problem occurs. even if field reduces 2 -> 1, it doesn't stop there and runs another loop as 1 -> 0 */
 				char *linestocompare[nlines];
 				capturefield(lineptr, linestocompare, field, nlines);
 				if (option & (FOLD + (field - 1) * 8))
@@ -109,14 +109,22 @@ int main(int argc, char *argv[])
 void capturefield(char *v[], char *w[], int field, int size)
 {
 	/* this is currently not capturing n'th field correctly */
-	int i, j, k;
+	/* if field == 0, capture the whole line ignoring commas
+	 * if field == 1, respect the csv format */
+	int i, j, k, f = field;
 	char c, *p, line[MAXLEN];
 	for (i = 0; i < size; i++) {
 		for (j = 0, k = 0; (c = v[i][j]) != '\0'; j++) {
-			if (field == 0 && k < MAXLEN - 1) {
+			if (f == 0)
 				line[k++] = c;
+			else if (f == 1) {
+				if (c == ',')
+					break;
+				else
+					line[k++] = c;
 			}
-			field = (c == ',') ? field-1 : field;
+			else if (c == ',')
+				f--;
 		}
 		line[k] = '\0';
 		if ((p = alloc(MAXLEN)) == NULL)
@@ -126,6 +134,7 @@ void capturefield(char *v[], char *w[], int field, int size)
 			w[i] = p;
 			printf("(capturefield) \tw[%d] = %s\n", i, w[i]);
 		}
+		f = field;
 	}
 }
 
