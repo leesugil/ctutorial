@@ -34,16 +34,17 @@
 #define FOLD	4	/* 0100 fold upper and lower cases */
 #define DIREC	8	/* 1000 directory order */
 #define LINES	100	/* max # of lines to be sorted */
+#define MAXLEN 1000
 #define runqsort(x, p, y, z, q) (qsort2((void **) p, 0, nlines-1, (int (*)(void *, void *, int)) x, y, z, q))
 
 int numcmp(char *, char *);
-int dircmp(char *, char *);
 int strcmp2(char *, char *, int);
 int readlines(char *lineptr[], int maxlines);
 void qsort2(void *v[], int left, int right, int (*comp)(void *, void *, int), int, int, void *w[]);
 void writelines(char *lineptr[], int nlines, int order);
-void capturefield(void *v[], void *w[], int field);
+void capturefield(char *v[], char *w[], int field, int size);
 void foldlines(char *v[], int size);
+void dirlines(char *v[], int size);
 
 static int option = 0;	/* now int instead of char to hold up to the number of bytes an integer variable can hold in the system */
 static int field = 0;
@@ -83,14 +84,14 @@ int main(int argc, char *argv[])
 		if ((nlines = readlines(lineptr, LINES)) > 0) {
 			while (field > 0) {
 				char *linestocompare[nlines];
-				capturefield(lineptr, linestocompare, field);
+				capturefield(lineptr, linestocompare, field, nlines);
 				if (option & (FOLD + (field - 1) * 8))
 					foldlines(linestocompare, nlines);
+				if (option & (DIREC + (field - 1) * 8))
+					dirlines(linestocompare, nlines);
 
 				if (option & (NUMERIC + (field - 1) * 8))
 					runqsort(numcmp, lineptr, option, field--, linestocompare);
-				else if (option & (DIREC + (field - 1) * 8))
-					runqsort(dircmp, lineptr, option, field--, linestocompare);
 				else
 					runqsort(strcmp2, lineptr, option, field--, linestocompare);
 			}
@@ -105,8 +106,24 @@ int main(int argc, char *argv[])
 }
 
 /* capturefield: from v array of pointers to CSV, captures the field'th field and store a pointer to it in w */
-void capturefield(void *v[], void *w[], int field)
+void capturefield(char *v[], char *w[], int field, int size)
 {
+	int i, j, k;
+	char c, *p, line[MAXLEN];
+	for (i = 0; i < size; i++) {
+		for (j = 0, k = 0; (c = *v[i][j]) != '\0' && field >= 0; j++) {
+			if (!field && k < MAXLEN - 1)
+				line[k++] = c;
+			field = (c == ',') ? field-1 : field;
+		}
+		line[k] = '\0';
+		if ((p = alloc(MAXLEN)) == NULL)
+			printf("(capturefield) Out of memory!\n");
+		else {
+			strcpy(p, line);
+			w[i] = p;
+		}
+	}
 }
 
 /* foldlines: convert strings to lower cases */
@@ -116,6 +133,15 @@ void foldlines(char *v[], int size)
 	for (i = 0; i < size; i++)
 		while (*v[i][0] != '\0')	/* (*v[i])[0] */
 			*v[i][0] = tolower((*v[i]++)[0]);
+}
+
+/* dirlines: convert strings to directory order form */
+void dirlines(char *v[], int size)
+{
+	int i;
+	for (i = 0; i < size; i++)
+		while (*v[i][0] != '\0')	/* (*v[i])[0] */
+			; /* add code here */
 }
 
 /* qsort2: sort v[left]...v[right] into increasing order */
@@ -145,7 +171,6 @@ void qsort2(void *v[], int left, int right, int (*comp)(void *, void *, int), in
 	qsort2(v, last+1, right, comp, option, w);
 }
 
-#define MAXLEN 1000
 /* readlines: read input lines */
 int readlines(char *lineptr[], int maxlines)
 {
@@ -199,15 +224,6 @@ void swap(void *v[], int i, int j)
 	temp = v[i];
 	v[i] = v[j];
 	v[j] = temp;
-}
-
-/* dircmp: compares only letters, numbers, and blanks.
- * compatiable with -f
- * returns <0 if s<t, 0 if s==t, >0 if s>t */
-int dircmp(char *s, char *t)
-{
-	/* deprecated */
-	return 0;
 }
 
 /* strcmp2: returns <0 if s<t, 0 if s==t, >0 if s>t
