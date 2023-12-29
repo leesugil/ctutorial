@@ -26,6 +26,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <math.h>
 #include "getline.c"
 #include "alloc.c"
 
@@ -55,21 +56,29 @@ int main(int argc, char *argv[])
 	char *lineptr[LINES];
 	int nlines;
 	int c, rc = 0;
+	int fieldsort = 1;
 
-	while (--argc > 0 && (*++argv)[0] == '-' && ++field > 0)
+	while (--argc > 0 && (*++argv)[0] == '-') {
+		option <<= 4;	/* the left most half-byte will represent the option for the first field */
+		/* the right most 4-bits are the option for the right most field */
+		field++;
 		while ((c = *++argv[0]))
 			switch (c) {
 				case 'd':	/* directory order */
-					option |= (DIREC + (field - 1) * 8);
+					option |= DIREC;
+					printf("DIREC on field %d\n\toption: %d\n", field, option);
 					break;
 				case 'f':	/* fold upper and lower cases */
-					option |= (FOLD + (field - 1) * 8);
+					option |= FOLD;
+					printf("FOLD on field %d\n\toption: %d\n", field, option);
 					break;
 				case 'n':	/* numeric sort */
-					option |= (NUMERIC + (field - 1) * 8);
+					option |= NUMERIC;
+					printf("NUMERIC on field %d\n\toption: %d\n", field, option);
 					break;
 				case 'r':	/* sort in decreasing order */
-					option |= (DECR + (field - 1) * 8);
+					option |= DECR;
+					printf("DECR on field %d\n\toption: %d\n", field, option);
 					break;
 				default:
 					printf("sort: illegal option %c\n", c);
@@ -77,31 +86,46 @@ int main(int argc, char *argv[])
 					rc = -1;
 					break;
 			}
+	}
 	printf("accepted option(s): %x, %d field(s)\n", option, field);
 	if (argc)
 		printf("Usage: <codename> -fnrd -fnrd ... CSV support only\n");
 	else {
 		if ((nlines = readlines(lineptr, LINES)) > 0) {
-			while (field >= 0) { /* this is where a problem occurs. even if field reduces 2 -> 1, it doesn't stop there and runs another loop as 1 -> 0 */
+			while (field >= 0 && fieldsort == 1) {
 				char *linestocompare[nlines];
 				capturefield(lineptr, linestocompare, field, nlines);
-				if (option & (FOLD + (field - 1) * 8))
+				if (option & FOLD)	/* FOLD */
 					foldlines(linestocompare, nlines);
-				if (option & (DIREC + (field - 1) * 8))
+				if (option & DIREC)	/* DIREC */
 					dirlines(linestocompare, nlines);
 
-				if (option & (NUMERIC + (field-- - 1) * 8))
+				int ind = option & NUMERIC;
+				printf("field = %d, option = %d, ind = %d\n", field, option, ind);
+				if (ind) {	/* NUMERIC */
+					printf("...numcmp qsort\n");
 					runqsort(numcmp, lineptr, linestocompare);
-				else
+				}
+				else {
+					printf("...strcmp2 qsort\n");
 					runqsort(strcmp2, lineptr, linestocompare);
+				}
+				printf("sorted field %d\n", field);
+				if (field == 1)
+					fieldsort = 0;
+				field--;
+				option >>= 4;
+				printf("option decresed to %d\n", option);
 			}
 			printf("\n\n(sort) Printing Output...\n\n");
-			writelines(lineptr, nlines, option & DECR);
+			writelines(lineptr, nlines, option & DECR); /* this option & DECR could also be wrong */
+			/* also DECR should be fundamentally placed somewhere else inside the while loop as my original solutions to previous exercise problems attempted */
 		} else {
 			printf("input too big to sort\n");
 			rc = -1;
 		}
 	}
+	printf("option & DECR should be localized\n");
 	return rc;
 }
 
@@ -154,7 +178,7 @@ void dirlines(char *v[], int size)
 	char c;
 	for (i = 0; i < size; i++)
 		for (j = 0; (c = v[i][j]) != '\0'; j++)
-			if (!isalnum(c) || c != ' ')
+			if (!isalnum(c) && c != ' ')
 				v[i][j] = ' ';
 }
 
