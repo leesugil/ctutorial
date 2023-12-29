@@ -129,19 +129,21 @@ void capturefield(char *v[], char *w[], int field, int size)
 /* foldlines: convert strings to lower cases */
 void foldlines(char *v[], int size)
 {
-	int i;
+	int i, j;
 	for (i = 0; i < size; i++)
-		while (*v[i][0] != '\0')	/* (*v[i])[0] */
-			*v[i][0] = tolower((*v[i]++)[0]);
+		for (j = 0; *v[i][j] != '\0'; j++)
+			*v[i][j] = tolower(*v[i][j]);
 }
 
 /* dirlines: convert strings to directory order form */
 void dirlines(char *v[], int size)
 {
-	int i;
+	int i, j;
+	char c;
 	for (i = 0; i < size; i++)
-		while (*v[i][0] != '\0')	/* (*v[i])[0] */
-			; /* add code here */
+		for (j = 0; (c = *v[i][j]) != '\0'; j++)
+			if (!isalnum(c) || c != ' ')
+				*v[i][j] = ' ';
 }
 
 /* qsort2: sort v[left]...v[right] into increasing order */
