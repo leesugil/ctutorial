@@ -36,13 +36,14 @@
 #define LINES	100	/* max # of lines to be sorted */
 #define runqsort(x, p, y, z, q) (qsort2((void **) p, 0, nlines-1, (int (*)(void *, void *, int)) x, y, z, q))
 
-int foldcmp(char *, char *);
 int numcmp(char *, char *);
 int dircmp(char *, char *);
 int strcmp2(char *, char *, int);
 int readlines(char *lineptr[], int maxlines);
 void qsort2(void *v[], int left, int right, int (*comp)(void *, void *, int), int, int, void *w[]);
 void writelines(char *lineptr[], int nlines, int order);
+void capturefield(void *v[], void *w[], int field);
+void foldlines(char *v[], int size);
 
 static int option = 0;	/* now int instead of char to hold up to the number of bytes an integer variable can hold in the system */
 static int field = 0;
@@ -77,19 +78,15 @@ int main(int argc, char *argv[])
 			}
 	printf("accepted option(s): %x, %d field(s)\n", option, field);
 	if (argc)
-		printf("Usage: <codename> -fnrd \n");
+		printf("Usage: <codename> -fnrd -fnrd ... CSV support only\n");
 	else {
-		/* sort must be done multiple times, hence changes here */
-		/* since it's a proptype, we assume the field sorting is always done starting from the initial field to subsequent fields */
-		/* to each comparison function, we provide the field number to work on as well which to the corresponding changes should be made in the function later in this work. */
 		if ((nlines = readlines(lineptr, LINES)) > 0) {
 			while (field > 0) {
-				/* this code also should turn back to the original idea with option & FOLD and option & DIREC showing up clearly in here */
-				/* in order for this to work, especially making FOLD and DIREC interchangeably used, should i make a copy of the original lines that's allowed to be modified such as masking certain characters for comparisons without hurting the original?
-				 * also, even if i do that, in which order FLD and DIREC sort should appear in here, if it's ever appropriate with the if-elif structure? */
-				char *linestocompare[LINES];
+				char *linestocompare[nlines];
+				capturefield(lineptr, linestocompare, field);
 				if (option & (FOLD + (field - 1) * 8))
-					;	/* determine whether to use the original lineptr or the tolower(*) version of it */
+					foldlines(linestocompare, nlines);
+
 				if (option & (NUMERIC + (field - 1) * 8))
 					runqsort(numcmp, lineptr, option, field--, linestocompare);
 				else if (option & (DIREC + (field - 1) * 8))
@@ -105,6 +102,20 @@ int main(int argc, char *argv[])
 		}
 	}
 	return rc;
+}
+
+/* capturefield: from v array of pointers to CSV, captures the field'th field and store a pointer to it in w */
+void capturefield(void *v[], void *w[], int field)
+{
+}
+
+/* foldlines: convert strings to lower cases */
+void foldlines(char *v[], int size)
+{
+	int i;
+	for (i = 0; i < size; i++)
+		while (*v[i][0] != '\0')	/* (*v[i])[0] */
+			*v[i][0] = tolower((*v[i]++)[0]);
 }
 
 /* qsort2: sort v[left]...v[right] into increasing order */
@@ -188,15 +199,6 @@ void swap(void *v[], int i, int j)
 	temp = v[i];
 	v[i] = v[j];
 	v[j] = temp;
-}
-
-/* foldcmp: return <0 if s<t, 0 if s==t, >0 if s>t */
-int foldcmp(char *s, char *t)
-{
-	for ( ; tolower(*s) == tolower(*t); s++, t++)
-		if (*s == '\0')
-			return 0;
-	return tolower(*s) - tolower(*t);
 }
 
 /* dircmp: compares only letters, numbers, and blanks.
