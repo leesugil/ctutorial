@@ -1,4 +1,4 @@
-#define ALLOCSIZE 10000	/* size of available space */
+#define ALLOCSIZE 10000000	/* size of available space */
 
 static char allocbuf[ALLOCSIZE];	/* storage for alloc */
 static char *allocp = allocbuf;	/* next free position */
