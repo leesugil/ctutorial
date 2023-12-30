@@ -67,19 +67,15 @@ int main(int argc, char *argv[])
 			switch (c) {
 				case 'd':	/* directory order */
 					option |= DIREC;
-					printf("DIREC on field %d\n\toption: %d\n", field, option);
 					break;
 				case 'f':	/* fold upper and lower cases */
 					option |= FOLD;
-					printf("FOLD on field %d\n\toption: %d\n", field, option);
 					break;
 				case 'n':	/* numeric sort */
 					option |= NUMERIC;
-					printf("NUMERIC on field %d\n\toption: %d\n", field, option);
 					break;
 				case 'r':	/* sort in decreasing order */
 					option |= DECR;
-					printf("DECR on field %d\n\toption: %d\n", field, option);
 					break;
 				default:
 					printf("sort: illegal option %c\n", c);
@@ -88,7 +84,6 @@ int main(int argc, char *argv[])
 					break;
 			}
 	}
-	printf("accepted option(s): %x, %d field(s)\n", option, field);
 	if (argc)
 		printf("Usage: <codename> -fnrd -fnrd ... CSV support only\n");
 	else {
@@ -101,26 +96,18 @@ int main(int argc, char *argv[])
 				if (option & DIREC)
 					dirlines(linestocompare, nlines);
 
-				int ind = option & NUMERIC;
-				printf("field = %d, option = %d, ind = %d\n", field, option, ind);
-				if (option & NUMERIC) {	/* NUMERIC */
-					printf("...numcmp qsort\n");
+				if (option & NUMERIC)
 					runqsort(numcmp, lineptr, linestocompare);
-				}
-				else {
-					printf("...strcmp2 qsort\n");
+				else
 					runqsort(strcmp2, lineptr, linestocompare);
-				}
 
 				if (option & DECR)
 					descend(lineptr, nlines);
 
-				printf("sorted field %d\n", field);
 				if (field == 1)
 					fieldsort = 0;
 				field--;
 				option >>= 4;
-				printf("option decresed to %d\n", option);
 			}
 			printf("\n\n(sort) Printing Output...\n\n");
 			writelines(lineptr, nlines);
@@ -159,7 +146,6 @@ void capturefield(char *v[], char *w[], int field, int size)
 		else {
 			strcpy(p, line);
 			w[i] = p;
-			printf("(capturefield) \tw[%d] = %s\n", i, w[i]);
 		}
 		f = field;
 	}
