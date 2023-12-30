@@ -108,8 +108,10 @@ int main(int argc, char *argv[])
 					fieldsort = 0;
 				field--;
 				option >>= 4;
+				printf("\n(sort) ...Printing interim output...\n");
+				writelines(lineptr, nlines);
 			}
-			printf("\n\n(sort) Printing Output...\n\n");
+			printf("\n(sort) Printing Output...\n");
 			writelines(lineptr, nlines);
 		} else {
 			printf("input too big to sort\n");
@@ -146,6 +148,7 @@ void capturefield(char *v[], char *w[], int field, int size)
 		else {
 			strcpy(p, line);
 			w[i] = p;
+			printf("(capturefield) w[%d] = %s\n", i, w[i]);
 		}
 		f = field;
 	}
@@ -199,18 +202,28 @@ void qsort2(void *v[], int left, int right, int (*comp)(void *, void *), void *w
 	if (left >= right)
 		return;
 	mid = (left + right) / 2;
-	if ((*comp)(w[left], w[right]) > 0) {
-		swap(v, left, mid);
-		swap(w, left, mid);
-	}
+	printf("(qsort2)__initial__ left: v[%d] = \"%s\", mid: v[%d] = \"%s\", right: v[%d] = \"%s\"\n", left, v[left], mid, v[mid], right, v[right]);
+	if ((*comp)(w[mid], w[left]) < 0)
+		for (i = mid - 1; i >= left; i--) {	/* (1) */
+			printf("(qsort2) \tplacing basis to the left position: v[%d] = \"%s\" and v[%d] = \"%s\"\n", i, v[i], i+1, v[i+1]);
+			swap(v, i, i + 1);
+			swap(w, i, i + 1);
+		}
+	printf("(qsort2)__initial swap__ left: v[%d] = \"%s\", mid: v[%d] = \"%s\", right: v[%d] = \"%s\"\n", left, v[left], mid, v[mid], right, v[right]);
 	last = left;
-	for (i = left+1; i <= right; i++)
+	for (i = left+1; i <= right; i++)	/* (2) */
 		if ((*comp)(w[i], w[left]) < 0) {
+			printf("(qsort2) \t\tw[i] < w[left], swapping v[%d] = \"%s\" and v[%d] = \"%s\"\n", i, v[last+1], i, v[i]);
 			swap(v, ++last, i);
 			swap(w, last, i);
+			printf("(qsort2) \t\t...swapped result: v[%d] = \"%s\" and v[%d] = \"%s\"\n", last, v[last], i, v[i]);
 		}
-	swap(v, left, last);
-	swap(w, left, last);
+	for (i = left; i < last; i++) {	/* error here? */
+		printf("(qsort2) \trestoring the basis to the new \"mid\" position: v[%d] = \"%s\" and v[%d] = \"%s\"\n", i, v[i], i+1, v[i+1]);
+		swap(v, i, i + 1);
+		swap(w, i, i + 1);
+	}
+	printf("(qsort2)__terminal__ left: v[%d] = \"%s\", last: v[%d] = \"%s\", right: v[%d] = \"%s\"\n", left, v[left], last, v[last], right, v[right]);
 	qsort2(v, left, last-1, comp, w);
 	qsort2(v, last+1, right, comp, w);
 }
