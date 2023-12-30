@@ -42,10 +42,11 @@ int numcmp(char *, char *);
 int strcmp2(char *, char *);
 int readlines(char *lineptr[], int maxlines);
 void qsort2(void *v[], int left, int right, int (*comp)(void *, void *), void *w[]);
-void writelines(char *lineptr[], int nlines, int order);
+void writelines(char *lineptr[], int nlines);
 void capturefield(char *v[], char *w[], int field, int size);
 void foldlines(char *v[], int size);
 void dirlines(char *v[], int size);
+void descend(char *v[], int size);
 
 static int option = 0;	/* now int instead of char to hold up to the number of bytes an integer variable can hold in the system */
 static int field = 0;
@@ -95,14 +96,14 @@ int main(int argc, char *argv[])
 			while (field >= 0 && fieldsort == 1) {
 				char *linestocompare[nlines];
 				capturefield(lineptr, linestocompare, field, nlines);
-				if (option & FOLD)	/* FOLD */
+				if (option & FOLD)
 					foldlines(linestocompare, nlines);
-				if (option & DIREC)	/* DIREC */
+				if (option & DIREC)
 					dirlines(linestocompare, nlines);
 
 				int ind = option & NUMERIC;
 				printf("field = %d, option = %d, ind = %d\n", field, option, ind);
-				if (ind) {	/* NUMERIC */
+				if (option & NUMERIC) {	/* NUMERIC */
 					printf("...numcmp qsort\n");
 					runqsort(numcmp, lineptr, linestocompare);
 				}
@@ -110,6 +111,10 @@ int main(int argc, char *argv[])
 					printf("...strcmp2 qsort\n");
 					runqsort(strcmp2, lineptr, linestocompare);
 				}
+
+				if (option & DECR)
+					descend(lineptr, nlines);
+
 				printf("sorted field %d\n", field);
 				if (field == 1)
 					fieldsort = 0;
@@ -118,14 +123,12 @@ int main(int argc, char *argv[])
 				printf("option decresed to %d\n", option);
 			}
 			printf("\n\n(sort) Printing Output...\n\n");
-			writelines(lineptr, nlines, option & DECR); /* this option & DECR could also be wrong */
-			/* also DECR should be fundamentally placed somewhere else inside the while loop as my original solutions to previous exercise problems attempted */
+			writelines(lineptr, nlines);
 		} else {
 			printf("input too big to sort\n");
 			rc = -1;
 		}
 	}
-	printf("option & DECR should be localized\n");
 	return rc;
 }
 
@@ -182,6 +185,23 @@ void dirlines(char *v[], int size)
 				v[i][j] = ' ';
 }
 
+/* descend: change ascending order to descending */
+void descend(char *v[], int size)
+{
+	int i;
+	char *p;
+
+	for (i = 0; i < size/2; i++) {
+		if ((p = alloc(MAXLEN)) == NULL)
+			printf("(descend) Out of memory!\n");
+		else {
+			strcpy(p, v[i]);
+			v[i] = v[size - 1 - i];
+			v[size - 1 - i] = p;
+		}
+	}
+}
+
 /* qsort2: sort v[left]...v[right] into increasing order */
 void qsort2(void *v[], int left, int right, int (*comp)(void *, void *), void *w[])
 {
@@ -228,16 +248,12 @@ int readlines(char *lineptr[], int maxlines)
 }
 
 /* writelines: write output lines */
-void writelines(char *lineptr[], int nlines, int decr)
+void writelines(char *lineptr[], int nlines)
 {
 	int i;
 
-	if (decr)
-		for (i = nlines-1; i >= 0; i--)
-			printf("%s\n", lineptr[i]);
-	else
-		for (i = 0; i < nlines; i++)
-			printf("%s\n", lineptr[i]);
+	for (i = 0; i < nlines; i++)
+		printf("%s\n", lineptr[i]);
 }
 
 /* numcmp: compare s1 and s2 numerically */
