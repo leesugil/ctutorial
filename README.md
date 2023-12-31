@@ -367,3 +367,29 @@ This is a personal study note for learning/recapping the C language.
             * \* is a prefix operator that has lower precedence than ().
             * int \*f();    function that returns pointer to int
             * int (\*pf)(); pointer to function that returns int
+    6. Structures
+        1. Basics of Structures
+            * struct point {
+                int x;
+                int y;
+            };
+            * struct rect {
+                struct point pt1;
+                struct point pt2;
+            };
+            * struct {
+                char name[64];
+                char race[64];
+                char class[64];
+            } x, y, z;
+            * struct point pt = { 1080, 720 };
+            * '.' structure operator
+            * pt.x, pt.y
+            * Personal note: Since I'm already familiar with class and instance from C++, my immediate question after seeing the definition of structure was to tell the difference from class in C++. Structures literally also called "records", meaning there will be no "methods" but a record of data, unlike class objects in OOP.
+        2. Structures and Functions
+            * struct point makepoint(int x, int y) {...}
+            * struct point origin, \*pp;
+            * pp = &origin;
+            * pp->*member-of-structure*
+                * pp->x
+            * The structure operators . and ->, together with () for function calls and [] for subscripts, are at the top of the precedence hierarchy.
