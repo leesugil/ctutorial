@@ -363,3 +363,7 @@ This is a personal study note for learning/recapping the C language.
 			* (\*comp)(void \*, void \*) indicates any funciton as an argument with two pointer arguments.
 			* The generic pointer type void \* is used for the arguments.
 			* (int (\*)(void\*,void\*))(numeric ? numcmp : strcmp));
+        12. Complicated Declarations
+            * \* is a prefix operator that has lower precedence than ().
+            * int \*f();    function that returns pointer to int
+            * int (\*pf)(); pointer to function that returns int
