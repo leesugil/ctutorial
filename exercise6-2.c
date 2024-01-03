@@ -108,14 +108,29 @@ int is_in_comment(char *);
 /* update_is_c_var: updates is_c_var and within_string_or_comment */
 void update_is_c_var(char *w)
 {
-	is_c_var = (!is_in_string(w)
-			&& !is_in_comment(w))
+	/* strings */
+	/* comments */
+	/* declaration keyword and ;*/
+	static int declaration = 0;		/* 1 if in declaration mode */
+	int i;
+	if (declaration == 0) {
+		for (i = 0; i < length; i++)
+			if (strcmp(w, vtype[i]) == 0)
+				declaration = 1;
+	}
+	else if (w[0] == ';')
+		declaration = 0;
+	/* strings, comments */
+	is_c_var = (declaration &&
+			(!is_in_string(w)
+			&& !is_in_comment(w)))
 		? 1 : 0;
 }
 
 /* is_in_string: detects " but avoids \" */
 int is_in_string(char *w)
 {
+	/* should be ignored when in comment */
 	static char in_string = 0;
 	static char p_char = '\0';
 	if (in_string == 0 && w[0] == '\"')
@@ -131,6 +146,7 @@ int is_in_string(char *w)
 /* is_in_comment: detects \/\* and \/\* */
 int is_in_comment(char *w)
 {
+	/* should be ignored when in string */
 	static char in_comment = 0;
 	static char p_char = '\0';
 	if (in_comment == 0
