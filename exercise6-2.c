@@ -38,6 +38,7 @@ void update_is_c_var(char *);
 char is_c_var = 0;			/* 1 if a variable name */
 char in_comment = 0;		/* 1 if in comment */
 char in_string = 0;			/* 1 if in strinf */
+int n = 6;
 
 /* word frequency count */
 int main(int argc, char *argv[])
@@ -103,6 +104,15 @@ char *vtype[] = {
 	"long"
 };
 int length = sizeof(vtype) / sizeof(vtype[0]);
+int in_vtype(char *w)
+{
+	int i;
+	for (i = 0; i < length; i++) {
+		if (strcmp(w, vtype[i]) == 0)
+			return 1;
+	}
+	return 0;
+}
 
 int is_in_string(char *);
 int is_in_comment(char *);
@@ -115,13 +125,12 @@ void update_is_c_var(char *w)
 	/* declaration keyword and ;*/
 	static int declaration = 0;		/* 1 if in declaration mode */
 	int i;
-	if (!is_in_string(w) && !is_in_comment(w)) {
+	int in_code = !is_in_string(w) && !is_in_comment(w);
+	if (in_code == 1) {
 		if (declaration == 0) {
-			for (i = 0; i < length; i++)
-				if (strcmp(w, vtype[i]) == 0)
-					declaration = 1;
-		}
-		else if (w[0] == ';')
+			if (in_vtype(w))
+				declaration = 1;
+		} else if (w[0] == ';')
 			declaration = 0;
 	}
 	/* strings, comments */
@@ -171,7 +180,7 @@ void treeprint(struct tnode *p)
 {
 	static char header = 1;
 	if (header == 1) {
-		printf("word\tcount\tvar_count\n");
+		printf("word\tvar_count\n");
 		header = 0;
 	}
 	if (p != NULL) {
@@ -181,9 +190,23 @@ void treeprint(struct tnode *p)
 	}
 }
 
+char *truncate(char *, int);
+
 void process_node(struct tnode *p)
 {
-	printf("%s\t%4d\t%4d\n", p->word, p->count, p->var_count);
+	static char *w = NULL;
+	static int count = 0;
+	
+	if (w == NULL)
+		w = truncate(p->word, n);
+	if (strcmp(w, truncate(p->word, n)) == 0)
+		count += p->var_count;
+	else {
+		if (count != 0 && !in_vtype(w))	/* filter */
+			printf("%s %4d\n", w, count);
+		w = truncate(p->word, n);
+		count = p->var_count;
+	}
 }
 
 #include <stdlib.h>
@@ -202,6 +225,14 @@ char *strdup2(char *s)	/* make a duplicate of s */
 	if (p != NULL)
 		strcpy(p, s);
 	return p;
+}
+
+char *truncate(char *w, int m)
+{
+	char *s = strdup2(w);
+	if (strlen(s) > m)
+		s[m] = '\0';
+	return s;
 }
 
 
