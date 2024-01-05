@@ -13,7 +13,8 @@ void time_measure_end(void);
 
 
 struct tnode_line {
-	int line_number;
+	int number;
+	int count;				/* frequency */
 	struct tnode_line *left;
 	struct tnode_line *right;
 };
@@ -21,7 +22,7 @@ struct tnode_line {
 struct tnode {				/* the tree node: */
 	char *word;				/* points to the text */
 	int count;				/* number of occurrences */
-	struct tnode_line line_num;		/* root of line number nodes */
+	struct tnode_line line;		/* root of line number nodes */
 	struct tnode *left;		/* left child */
 	struct tnode *right;	/* right child */
 };
@@ -33,7 +34,8 @@ struct tnode {				/* the tree node: */
 
 #define MAXWORD 100
 struct tnode *addtree(struct tnode *, char *);
-struct tnode_line *addtree_line(struct tnode_line *, int num);
+struct tnode_line *addtree_line(struct tnode_line *, int);
+struct tnode_line *create_line(void);
 void treeprint(struct tnode *);
 void treeprint_line(struct tnode_line *);
 
@@ -88,6 +90,32 @@ struct tnode *addtree(struct tnode *p, char *w)
 	return p;
 }
 
+struct tnode *talloc_line(void);
+struct tnode_line *addtree_line(struct tnode_line *p, int num)
+{
+	int cond;
+
+	if (p == NULL) {		/* a new line number has been found */
+		p = create_line(void);
+	} else if ((cond = num - p->number) == 0)
+		p->count++;			/* repeated word */
+	else if (cond < 0)		/* less than into left subtree */
+		p->left = addtree_line(p->left, num);
+	else					/* greater than into right subtree */
+		p->right = addtree_line(p->right, num);
+	return p;
+}
+
+struct tnode_line *create_line(void)
+{
+	struct tnode_line *p;
+	p = malloc_line();
+	p->number = num;
+	p->count = 1;
+	p->left = p->right = NULL;
+	return p;
+}
+
 /* treeprint: in-order print of tree p */
 void treeprint(struct tnode *p)
 {
@@ -104,6 +132,12 @@ void treeprint(struct tnode *p)
 struct tnode *talloc(void)
 {
 	return (struct tnode *) malloc(sizeof(struct tnode));
+}
+
+/* talloc_line: make a tnode_line */
+struct tnode *talloc_line(void)
+{
+	return (struct tnode_line *) malloc(sizeof(struct tnode_line));
 }
 
 char *strdup2(char *s)	/* make a duplicate of s */
