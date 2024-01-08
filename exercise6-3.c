@@ -19,12 +19,12 @@ struct tnode_line {
 	struct tnode_line *right;
 };
 
-struct tnode {				/* the tree node: */
-	char *word;				/* points to the text */
-	int count;				/* number of occurrences */
-	struct tnode_line line;		/* root of line number nodes */
-	struct tnode *left;		/* left child */
-	struct tnode *right;	/* right child */
+struct tnode {					/* the tree node: */
+	char *word;					/* points to the text */
+	int count;					/* number of occurrences */
+	struct tnode_line *line;	/* root of line number nodes */
+	struct tnode *left;			/* left child */
+	struct tnode *right;		/* right child */
 };
 
 
@@ -33,9 +33,9 @@ struct tnode {				/* the tree node: */
 #include "getword.c"
 
 #define MAXWORD 100
-struct tnode *addtree(struct tnode *, char *);
+struct tnode *addtree(struct tnode *, char *, int);
 struct tnode_line *addtree_line(struct tnode_line *, int);
-struct tnode_line *create_line(void);
+struct tnode_line *create_line(int);
 void treeprint(struct tnode *);
 void treeprint_line(struct tnode_line *);
 
@@ -48,11 +48,12 @@ int main(int argc, char *argv[])
 
 	struct tnode *root;
 	char word[MAXWORD];
+	int ln = 1;
 
 	root = NULL;
-	while (getword(word, MAXWORD) != EOF)
+	while (getword_line(word, MAXWORD, &ln) != EOF)	/* update current line numebr as well */
 		if (isalpha(word[0]))
-			root = addtree(root, word);
+			root = addtree(root, word, ln);
 	treeprint(root);
 
 
@@ -72,7 +73,7 @@ struct tnode *talloc(void);
 char *strdup2(char *);
 
 /* addtree: add a node with w, at or below p */
-struct tnode *addtree(struct tnode *p, char *w)
+struct tnode *addtree(struct tnode *p, char *w, int line)
 {
 	int cond;
 
@@ -80,23 +81,26 @@ struct tnode *addtree(struct tnode *p, char *w)
 		p = talloc();		/* make a new node */
 		p->word = strdup2(w);
 		p->count = 1;
+		p->line = create_line(line);
 		p->left = p->right = NULL;
-	} else if ((cond = strcmp(w, p->word)) == 0)
+	} else if ((cond = strcmp(w, p->word)) == 0) {
 		p->count++;			/* repeated word */
+		p->line = addtree_line(p->line, line);
+	}
 	else if (cond < 0)		/* less than into left subtree */
-		p->left = addtree(p->left, w);
+		p->left = addtree(p->left, w, line);
 	else					/* greater than into right subtree */
-		p->right = addtree(p->right, w);
+		p->right = addtree(p->right, w, line);
 	return p;
 }
 
-struct tnode *talloc_line(void);
+struct tnode_line *talloc_line(void);
 struct tnode_line *addtree_line(struct tnode_line *p, int num)
 {
 	int cond;
 
-	if (p == NULL) {		/* a new line number has been found */
-		p = create_line(void);
+	if (p == NULL) {
+		p = create_line(num);
 	} else if ((cond = num - p->number) == 0)
 		p->count++;			/* repeated word */
 	else if (cond < 0)		/* less than into left subtree */
@@ -106,10 +110,10 @@ struct tnode_line *addtree_line(struct tnode_line *p, int num)
 	return p;
 }
 
-struct tnode_line *create_line(void)
+struct tnode_line *create_line(int num)
 {
 	struct tnode_line *p;
-	p = malloc_line();
+	p = talloc_line();
 	p->number = num;
 	p->count = 1;
 	p->left = p->right = NULL;
@@ -121,8 +125,20 @@ void treeprint(struct tnode *p)
 {
 	if (p != NULL) {
 		treeprint(p->left);
-		printf("%4d %s\n", p->count, p->word);
+		printf("%4d %s", p->count, p->word);
+		treeprint_line(p->line);
+		printf("\n");
 		treeprint(p->right);
+	}
+}
+
+/* treeprint_line: in-order print of tree p */
+void treeprint_line(struct tnode_line *p)
+{
+	if (p != NULL) {
+		treeprint_line(p->left);
+		printf(" %d", p->number);
+		treeprint_line(p->right);
 	}
 }
 
@@ -135,7 +151,7 @@ struct tnode *talloc(void)
 }
 
 /* talloc_line: make a tnode_line */
-struct tnode *talloc_line(void)
+struct tnode_line *talloc_line(void)
 {
 	return (struct tnode_line *) malloc(sizeof(struct tnode_line));
 }
