@@ -27,6 +27,16 @@ struct tnode {					/* the tree node: */
 	struct tnode *right;		/* right child */
 };
 
+char *filter[] = {
+	"the",
+	"and",
+	"a",
+	"is",
+	"are",
+	"am",
+	"or"
+};
+int filter_length = sizeof(filter) / sizeof(filter[0]);
 
 #include <ctype.h>
 #include <string.h>
@@ -120,14 +130,18 @@ struct tnode_line *create_line(int num)
 	return p;
 }
 
+int is_filtered(char *);
 /* treeprint: in-order print of tree p */
 void treeprint(struct tnode *p)
 {
 	if (p != NULL) {
 		treeprint(p->left);
-		printf("%4d %s", p->count, p->word);
-		treeprint_line(p->line);
-		printf("\n");
+		if (!is_filtered(p->word)) {
+			printf("%4d %s", p->count, p->word);
+			treeprint_line(p->line);
+			printf("\n");
+		} else
+			printf("filtered word: %s\n", p->word);
 		treeprint(p->right);
 	}
 }
@@ -166,8 +180,25 @@ char *strdup2(char *s)	/* make a duplicate of s */
 	return p;
 }
 
+char *tolower_string(char *);
+int is_filtered(char *w)
+{
+	int i;
+	for (i = 0; i < filter_length; i++) {
+		if (strcmp(tolower_string(w), filter[i]) == 0)
+			return 1;
+	}
+	return 0;
+}
 
-
+char *tolower_string(char *s)
+{
+	char *p = strdup2(s);
+	int i;
+	for (i = 0; i < strlen(p); i++)
+		p[i] = tolower(p[i]);
+	return p;
+}
 
 
 
