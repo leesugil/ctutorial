@@ -74,6 +74,7 @@ int main(int argc, char *argv[])
 	/* 2) to use the existing qsort, convert the field array to char *[] */
 	get_counter_field(o, sfield_int, tree_length);
 	create_char_array(sfield_char, tree_length);
+	itoa_array(sfield_int, sfield_char, tree_length);
 	outputprint(o, tree_length);
 
 
