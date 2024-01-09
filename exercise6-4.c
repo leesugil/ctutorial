@@ -26,19 +26,22 @@ struct tnode {				/* the tree node: */
 };
 
 struct output {
-	int count;
 	char *word;
+	int count;
 };
 
 #include <ctype.h>
 #include <string.h>
 #include "ungetch.c"
+#include "qsort.c"
+#include "itoa.c"
 
 #define MAXWORD 100
 struct tnode *addtree(struct tnode *, char *, int *);
-void treerecord(struct tnode *);
+void treerecord(struct tnode *, struct output *[]);
+void createoutput(struct output *[], int);
+void outputprint(struct output *[], int);
 int getword(char *, int);
-struct output *createoutput(int);
 
 /* word frequency count */
 int main(int argc, char *argv[])
@@ -50,13 +53,15 @@ int main(int argc, char *argv[])
 	struct tnode *root;
 	char word[MAXWORD];
 	int tree_length = 0;
+	struct output *o[tree_length];
 
 	root = NULL;
 	while (getword(word, MAXWORD) != EOF)
 		if (isalpha(word[0]))
 			root = addtree(root, word, &tree_length);
-	struct output *o[tree_length];
-	treerecord(root);
+	createoutput(o, tree_length);
+	treerecord(root, o);
+	outputprint(o, tree_length);
 
 
 
@@ -95,12 +100,15 @@ struct tnode *addtree(struct tnode *p, char *w, int *tree_length)
 }
 
 /* treerecord: in-order record of tree p */
-void treerecord(struct tnode *p)
+void treerecord(struct tnode *p, struct output *o[])
 {
+	static int i = 0;
 	if (p != NULL) {
-		treerecord(p->left);
-		printf("%4d %s\n", p->count, p->word);
-		treerecord(p->right);
+		treerecord(p->left, o);
+		o[i]->count = p->count;
+		o[i]->word = p->word;
+		i++;
+		treerecord(p->right, o);
 	}
 }
 
@@ -146,6 +154,34 @@ int getword(char *word, int lim)
 	return word[0];
 }
 
+/* outputprint: prints output */
+void outputprint(struct output *o[], int length)
+{
+	printf("count\tword\n");
+	int i;
+	for (i = 0; i < length; i++)
+		printf("%d\t%s\n", o[i]->count, o[i]->word);
+}
+
+struct output *oalloc(void)
+{
+	return (struct output *) malloc(sizeof(struct output));
+}
+
+/* createoutput: allocate memory to an empty struct output */
+void createoutput(struct output *p[], int length)
+{
+	int i;
+	for (i = 0; i < length; i++) {
+		p[i] = oalloc();
+		p[i]->count = 0;
+		p[i]->word = NULL;
+	}
+}
+
+
+
+
 
 
 
@@ -174,14 +210,12 @@ double cpu_time_used;
 void time_measure_start(void)
 {
 	/* wall-clock time */
-	extern struct timeval start_wall, end_wall;
-	extern double elapsed_time;
+	extern struct timeval start_wall;
 
 	gettimeofday(&start_wall, NULL);
 
 	/* cpu time */
-	extern clock_t start_cpu, end_cpu;
-	extern double cpu_time_used;
+	extern clock_t start_cpu;
 
 	start_cpu = clock();
 }
@@ -189,14 +223,18 @@ void time_measure_start(void)
 void time_measure_end(void)
 {
 	/* collect cpu time */
+	extern clock_t start_cpu, end_cpu;
+	extern double cpu_time_used;
+	
 	end_cpu = clock();
 	cpu_time_used = ((double) (end_cpu - start_cpu)) / CLOCKS_PER_SEC;
 	printf("\n\n\t*** END OF CODE ***\n\tCPU time used: %f seconds\n", cpu_time_used);
 
 	/* collect wall-clock time */
-	/* collect wall-clock time */
+	extern struct timeval start_wall, end_wall;
+	extern double elapsed_time;
+
 	gettimeofday(&end_wall, NULL);
 	elapsed_time = (end_wall.tv_sec - start_wall.tv_sec) + (end_wall.tv_usec - start_wall.tv_usec) / 1000000.0;
 	printf("\n\tElapsed wall-clock time: %f seconds\n", elapsed_time);
 }
-
