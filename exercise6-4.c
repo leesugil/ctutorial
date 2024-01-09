@@ -40,8 +40,11 @@ struct output {
 struct tnode *addtree(struct tnode *, char *, int *);
 void treerecord(struct tnode *, struct output *[]);
 void createoutput(struct output *[], int);
+void create_int_array(int *[], int);
+void create_char_array(char *[], int);
 void outputprint(struct output *[], int);
 int getword(char *, int);
+void get_counter_field(struct output *[], int *[], int);
 
 /* word frequency count */
 int main(int argc, char *argv[])
@@ -53,14 +56,24 @@ int main(int argc, char *argv[])
 	struct tnode *root;
 	char word[MAXWORD];
 	int tree_length = 0;
-	struct output *o[tree_length];
 
 	root = NULL;
 	while (getword(word, MAXWORD) != EOF)
 		if (isalpha(word[0]))
 			root = addtree(root, word, &tree_length);
+
+	struct output *o[tree_length];
+	int *sfield_int[tree_length];
+	char *sfield_char[tree_length];
+
 	createoutput(o, tree_length);
 	treerecord(root, o);
+	/* use qsort to further sort the output */
+	/* 1) get the field array for sorting comparison */
+	create_int_array(sfield_int, tree_length);
+	/* 2) to use the existing qsort, convert the field array to char *[] */
+	get_counter_field(o, sfield_int, tree_length);
+	create_char_array(sfield_char, tree_length);
 	outputprint(o, tree_length);
 
 
@@ -179,7 +192,26 @@ void createoutput(struct output *p[], int length)
 	}
 }
 
+void create_int_array(int *p[], int length)
+{
+	int i;
+	for (i = 0; i < length; i++)
+		p[i] = (int *) malloc(sizeof(int));
+}
 
+void create_char_array(char *p[], int length)
+{
+	int i;
+	for (i = 0; i < length; i++)
+		p[i] = (char *) malloc(sizeof(char) * MAXWORD);
+}
+
+void get_counter_field(struct output *v[], int *w[], int length)
+{
+	int i;
+	for (i = 0; i < length; i++)
+		*w[i] = v[i]->count;
+}
 
 
 
