@@ -20,15 +20,12 @@ int numcmp(char *s1, char *s2)
 /* numcmp2: compare s1 and s2 numerically. accepts reverse */
 int numcmp2(char *s1, char *s2, int reverse)
 {
-	printf("(numcmp2) (1)\n");
 	/* reverse: 1 if reverse */
 	double v1, v2;
 	int r = 1 - 2 * reverse;
 
-	printf("(numcmp2) (2) - s1: \"%s\", s2: \"%s\"\n", s1, s2);
 	v1 = atof2(s1);
 	v2 = atof2(s2);
-	printf("(numcmp2) (3)\n");
 	if (v1 - v2 < 0)
 		return -1 * r;
 	else if (v1 - v2 > 0)

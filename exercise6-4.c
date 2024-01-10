@@ -43,6 +43,7 @@ void createoutput(struct output *[], int);
 void create_int_array(int *[], int);
 void create_char_array(char *[], int);
 void outputprint(struct output *[], int);
+void outputprint2(struct output *[], int, char *[]);
 int getword(char *, int);
 void get_counter_field(struct output *[], int *[], int);
 
@@ -75,7 +76,12 @@ int main(int argc, char *argv[])
 	get_counter_field(o, sfield_int, tree_length);
 	create_char_array(sfield_char, tree_length);
 	itoa_array(sfield_int, sfield_char, tree_length);
-	outputprint(o, tree_length);
+	printf("...before sorting\n");
+	outputprint2(o, tree_length, sfield_char);
+	/* 3) use qsort */
+	printf("...after sorting\n");
+	qsort8((void **) sfield_char, 0, tree_length-1, 1, (void **) o);
+	outputprint2(o, tree_length, sfield_char);
 
 
 
@@ -175,6 +181,15 @@ void outputprint(struct output *o[], int length)
 	int i;
 	for (i = 0; i < length; i++)
 		printf("%d\t%s\n", o[i]->count, o[i]->word);
+}
+
+/* outputprint2: upgrades outputprint */
+void outputprint2(struct output *o[], int length, char *s[])
+{
+	printf("count\tcount\tword\n");
+	int i;
+	for (i = 0; i < length; i++)
+		printf("%s\t%d\t%s\n", s[i], o[i]->count, o[i]->word);
 }
 
 struct output *oalloc(void)

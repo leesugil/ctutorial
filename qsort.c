@@ -104,7 +104,7 @@ void qsort7(char *v[], int left, int right, int reverse, char *w[])
 	last = left;
 	for (i = left + 1; i <= right; i++)
 		if (r * strcmp(v[i], v[left]) < 0) {
-			swap4(v, ++last, i);
+			swap4(v, last, i);
 			swap4(w, ++last, i);
 		}
 	swap4(v, left, last);
@@ -113,36 +113,62 @@ void qsort7(char *v[], int left, int right, int reverse, char *w[])
 	qsort7(v, last+1, right, reverse, w);
 }
 
+void display_status(int *[], int, int);
+void display_change(int *[], int, int);
 
-/* qsort8: upgrades qsort7, accepts comparison function */
-void qsort8(char *v[], int left, int right, int reverse, int (*comp)(void *, void *, int), void *w[])
+/* qsort8: upgrades qsort7, uses swap5, accepts void */
+void qsort8(void *v[], int left, int right, int reverse, void *w[])
 {
-	int i, last, m, r;
+	printf("-----------(1)\n");
+	display_status((int **) v, left, right);
+	int i, last, m;
 
-	printf("(qsort8) (1)\n");
 	if (left >= right)
 		return;
 	m = (left + right)/2;
-	printf("(qsort8) (2) - swap(w, left, m)\n");
-	swap5((void *) v, left, m);
-	swap5(w, left, m);
+	swap3(v, left, m);
+	swap3(w, left, m);
+	display_change((int **) v, left, m);
 	last = left;
-	printf("(qsort8) (3) - main comparison\n");
-	printf("(qsort8) left+1: %d, right: %d\n", left+1, right);
-	for (i = left + 1; i <= right; i++) {
-		printf("(qsort8) %d <= %d <= %d, v[%d]: %s\n", left+1, i, right, i, v[i]);
-		if ((*comp)(v[i], v[left], reverse) < 0) {
-			printf("(qsort8) (4.1) - swapping after comparison to v[left]\n");
-			swap5((void *) v, ++last, i);
-			swap5(w, ++last, i);
-			printf("(qsort8) (4)\n");
+	printf("-----------(2)\n");
+	for (i = left+1; i <= right; i++)
+		if (numcmp2(v[i], v[left], reverse) < 0) {
+			swap3(v, ++last, i);
+			swap3(w, last, i);
+			display_change((int **) v, last, i);
 		}
-		printf("(qsort8) (4.5)\n");
-	}
-	swap5((void *) v, left, last);
-	swap5(w, left, last);
-	printf("(qsort8) (5)\n");
-	qsort8(v, left, last-1, reverse, comp, w);
-	qsort8(v, last+1, right, reverse, comp, w);
-	printf("(qsort8) (6)\n");
+	printf("-----------(3)\n");
+	swap3(v, left, last);
+	swap3(w, left, last);
+	display_change((int **) v, left, last);
+	qsort8(v, left, last-1, reverse, w);
+	qsort8(v, last+1, right, reverse, w);
+}
+
+void display_status(int *v[], int left, int right)
+{
+	int i;
+	for (i = 0; i < left; i++)
+		printf("  ");
+	for(i = left; i <= right; i++)
+		printf(" %d", *v[i] - '0');
+	printf("\n");
+}
+
+void display_change(int *v[], int left, int right)
+{
+	int i;
+	for (i = 0; i < left; i++)
+		printf("  ");
+	printf(" ^");
+	for (i = left + 1; i < right; i++)
+		printf("--");
+	printf("-^\n");
+
+	for (i = 0; i < left; i++)
+		printf("  ");
+	printf(" %d", *v[i] - '0');
+	for (i = left + 1; i < right; i++)
+		printf("  ");
+	printf(" %d\n", *v[i] - '0');
 }
