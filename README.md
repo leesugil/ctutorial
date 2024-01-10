@@ -393,3 +393,21 @@ This is a personal study note for learning/recapping the C language.
             * pp->*member-of-structure*
                 * pp->x
             * The structure operators . and ->, together with () for function calls and [] for subscripts, are at the top of the precedence hierarchy.
+		3. Arrays of Structures
+			* example: an array of structure { name, count } for a pre-defined dictionary and storing counts of each word occuring in a given text (using binsearch)
+		4. Pointers to Structures
+		5. Self-referential Structures
+			* example: binary tree that keeps adding nodes as it finds a new word in a given text and keeps sorting as adding them.
+		6. Table Lookup
+			* example: use of hashtab in #define
+		7. Typedef
+			* advantages:
+				* keeps data type more readible to human eyes
+				* portability: if a data type is aliased with typedef, then only typedefs need to be modified when the program is moved.
+		8. Unions
+			* union u_tag { ... };
+			* takes the largest storage space of all the member variable types, keeping the storage management more organized depending on the situation.
+		9. Bit-fields
+			* more human-readible ways to handle bit-fiddling for masking, flagging, etc.
+	7. Input and Output
+		1. 
