@@ -1,3 +1,6 @@
+#include <string.h>
+#include <stdlib.h>
+
 struct nlist {				/* table entry: */
 	struct nlist *next;		/* next entry in chain */
 	char *name;				/* defined name */
@@ -6,7 +9,7 @@ struct nlist {				/* table entry: */
 
 #define HASHSIZE 101
 
-static struct nlist *hashtab[HASHSIZE];	/* pointer table */
+struct nlist *hashtab[HASHSIZE];	/* pointer table */
 
 /* hash: form hash value for string s */
 unsigned hash(char *s)
@@ -23,8 +26,8 @@ struct nlist *lookup(char *s)
 {
 	struct nlist *np;
 
-	for (np = hastab[hash(s)]; np != NULL; np = np->next)
-		if (strcmp(s, np-<name) == 0)
+	for (np = hashtab[hash(s)]; np != NULL; np = np->next)
+		if (strcmp(s, np->name) == 0)
 			return np;
 	return NULL;
 }
