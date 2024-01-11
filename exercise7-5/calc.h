@@ -2,5 +2,6 @@
 void push(double);
 double pop(void);
 int getop(char []);
+int getop2(char []);
 int getch(void);
 void ungetch(int);
