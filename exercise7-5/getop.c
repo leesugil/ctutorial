@@ -33,14 +33,9 @@ int getop2(char s[])
 	if (scanf("%lf", &lf) == 1) {
 		/* record the number in s */
 		sprintf(s, "%lf", lf);
-		printf("NUMBER: %s\n", s);
 		return NUMBER;
-	} else if (scanf("%s", s) == 1) {
-		printf("OP: %c\n", s[0]);
+	} else if (scanf("%s", s) == 1)
 		return s[0];
-	}
-	else {
-		printf("EOF detected\n");
+	else
 		return EOF;
-	}
 }

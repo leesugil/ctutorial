@@ -11,8 +11,6 @@ int main()
 	double op, op2;
 	char s[MAXOP];
 
-	printf("Operator '.' to calculate.\n");
-
 	while ((type = getop2(s)) != EOF) {
 		switch (type) {
 			case NUMBER:
@@ -20,28 +18,29 @@ int main()
 				push(op);
 				break;
 			case '+':
-				printf("%c detected\n", type);
 				push(pop() + pop());
+				printf("\t%.8g\n", op = pop());
+				push(op);
 				break;
 			case '*':
-				printf("%c detected\n", type);
 				push(pop() * pop());
+				printf("\t%.8g\n", op = pop());
+				push(op);
 				break;
 			case '-':
-				printf("%c detected\n", type);
 				op2 = pop();
 				push(pop() - op2);
+				printf("\t%.8g\n", op = pop());
+				push(op);
 				break;
 			case '/':
-				printf("%c detected\n", type);
 				op2 = pop();
-				if (op2 != 0.0)
+				if (op2 != 0.0) {
 					push(pop() / op2);
-				else
+					printf("\t%.8g\n", op = pop());
+					push(op);
+				} else
 					printf("error: zero divisor\n");
-				break;
-			case '.':
-				printf("\t%.8g\n", pop());
 				break;
 			default:
 				printf("error: unknown command %s\n", s);
