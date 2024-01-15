@@ -4,25 +4,34 @@
 #include "template_clock.c"
 
 #include <stdio.h>
+#include <string.h>
 
 int main(int argc, char *argv[])
 {
 	time_measure_start();	/* code start */
 
 	/* read two files as strings */
-	FILE *fp;
+	FILE *fp1, *fp2;
 	int maxlen = 100;
 	char s1[maxlen], s2[maxlen];
 	char f1[] = "file1", f2[] = "file2";
 
-	fp = fopen(f1, "r");
-	fgets(s1, maxlen+1, fp);
-	fp = fopen(f2, "r");
-	fgets(s2, maxlen+1, fp);
-	fclose(fp);
+	fp1 = fopen(f1, "r");
+	fp2 = fopen(f2, "r");
 
-	printf("file1: %s\n", s1);
-	printf("file2: %s\n", s2);
+	/* compare the two line by line */
+	while (strcmp(fgets(s1, maxlen+1, fp1), fgets(s2, maxlen+1, fp2)) == 0) {
+		fprintf(stderr, "%s: %s", f1, s1);
+		fprintf(stderr, "%s: %s", f2, s2);
+	}
+
+	/* display the first different line */
+	printf("%s: %s", f1, s1);
+	printf("%s: %s", f2, s2);
+
+	/* close the program */
+	fclose(fp1);
+	fclose(fp2);
 
 
 
