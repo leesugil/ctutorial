@@ -3,7 +3,12 @@
 
 # Ignore log files
 *.log
+log/
 
 # Ignore temporary files
 tmp
 tmp.*
+tmp/
+temp
+temp.*
+temp/
