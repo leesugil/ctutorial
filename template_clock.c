@@ -1,6 +1,6 @@
 /* C clock template
  * Author: Sugil Steve Lee
- * Last Updated: 2024-01-11 */
+ * Last Updated: 2024-01-14 */
 
 #include <stdio.h>
 #include <sys/time.h>
@@ -36,7 +36,7 @@ void time_measure_end(void)
 	
 	end_cpu = clock();
 	cpu_time_used = ((double) (end_cpu - start_cpu)) / CLOCKS_PER_SEC;
-	printf("\n\n\t*** END OF CODE ***\n\tCPU time used: %f seconds\n", cpu_time_used);
+	fprintf(stderr, "\n\n\t*** END OF CODE ***\n\tCPU time used: %f seconds\n", cpu_time_used);
 
 	/* collect wall-clock time */
 	extern struct timeval start_wall, end_wall;
@@ -44,5 +44,5 @@ void time_measure_end(void)
 
 	gettimeofday(&end_wall, NULL);
 	elapsed_time = (end_wall.tv_sec - start_wall.tv_sec) + (end_wall.tv_usec - start_wall.tv_usec) / 1000000.0;
-	printf("\n\tElapsed wall-clock time: %f seconds\n", elapsed_time);
+	fprintf(stderr, "\n\tElapsed wall-clock time: %f seconds\n", elapsed_time);
 }

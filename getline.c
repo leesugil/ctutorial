@@ -14,3 +14,12 @@ int getline2(char s[], int lim)
 	s[i] = '\0';
 	return i;
 }
+
+/* getline3: using fgets */
+int getline3(char *line, int max)
+{
+	if (fgets(line, max, stdin) == NULL)
+		return 0;
+	else
+		return strlen(line);
+}
