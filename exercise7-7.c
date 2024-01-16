@@ -21,9 +21,9 @@ int main(int argc, char *argv[])
 	int c, found;
 	FILE *fp;
 	char *prog = argv[0];
+	char keyword[MAXLINE];
 
-	while (--argc > 0) {
-		if ((*++argv)[0] == '-' && flags.file != 1) {
+	while (--argc > 0 && (*++argv)[0] == '-')
 			while ((c = *++argv[0]))
 				switch (c) {
 					case 'x':
@@ -36,35 +36,49 @@ int main(int argc, char *argv[])
 						flags.file = 1;
 						break;
 					default:
-						printf("find: illegal option %c\n", c);
+						fprintf(stderr, "find: illegal option %c\n", c);
 						argc = 0;
 						found = -1;
 						break;
 				}
+	
+	if (argc == 0 || (flags.file == 1 && argc < 2))
+		printf("Usage: find -xnf pattern filename1 filename2 ...\n");
+	else {
+		strcpy(keyword, *argv);
+		if (flags.file != 1) {	/* original code */
+			while (getline(&line, &mline, stdin) > 0) {
+				lineno++;
+				if ((strstr(line, keyword) != NULL) != flags.except) {
+					if (flags.number)
+						printf("%ld:", lineno);
+					printf("%s", line);
+					found++;
+				}
+			}
 		}
-		else if (flags.file == 1) {
-			/* open file and feed */
-			if ((fp = fopen(*argv, "r")) == NULL) {
-				fprintf(stderr, "%s: can't open %s\n", prog, *argv);
-				exit(1);
-			} else {
-				/* feed */
-				fclose(fp);
+		else {
+			/* *argv still indicating the pattern name */
+			while (--argc > 0) {
+				/* read file */
+				if ((fp = fopen(*++argv, "r")) == NULL) {
+					fprintf(stderr, "%s: can't open %s\n", prog, *argv);
+					exit(1);
+				} else {
+					/* read lines from the file */
+					char line2[MAXLINE];
+					while (fgets(line2, MAXLINE-1, fp) != NULL) {
+						lineno++;
+						if ((strstr(line2, keyword) != NULL) != flags.except) {
+							if (flags.number)
+								printf("%ld:", lineno);
+							printf("%s", line2);
+							found++;
+						}
+					}
+				}
 			}
 		}
 	}
-	
-	if (argc != 1)
-		printf("Usage: find -x -n pattern -f filename1 filename2 ...\n");
-	else
-		while (getline(&line, &mline, stdin) > 0) {
-			lineno++;
-			if ((strstr(line, *argv) != NULL) != flags.except) {
-				if (flags.number)
-					printf("%ld:", lineno);
-				printf("%s", line);
-				found++;
-			}
-		}
 	return found;
 }
