@@ -460,6 +460,7 @@ This is a personal study note for learning/recapping the C language.
 				* strlen: string length
 				* strchar: character in string
 				* strrchar: character in string, reverse
+				* strstr: substring in string
 			2. Character Class Testing and Conversion
 				* isalpha
 				* isupper
