@@ -2,7 +2,6 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "getline.c"
 
 #define MAXLINE 1000
 
@@ -14,7 +13,8 @@ struct {
 /* find: print lines that match pattern from 1st arg from files*/
 int main(int argc, char *argv[])
 {
-	char line[MAXLINE];
+	char *line = NULL;
+	size_t mline = 0;
 	long lineno = 0;
 	int c, found;
 
@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 	if (argc != 1)
 		printf("Usage: find -x -n pattern -f filename1 filename2 ...\n");
 	else
-		while (getline2(line, MAXLINE) > 0) {
+		while (getline(&line, &mline, stdin) > 0) {
 			lineno++;
 			if ((strstr(line, *argv) != NULL) != flags.except) {
 				if (flags.number)
