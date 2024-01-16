@@ -6,21 +6,26 @@
 
 #define MAXLINE 1000
 
-/* find: print lines that match pattern from 1st arg */
-main(int argc, char *argv[])
+struct {
+	unsigned int except : 1;
+	unsigned int number : 1;
+} flags;
+
+/* find: print lines that match pattern from 1st arg from files*/
+int main(int argc, char *argv[])
 {
 	char line[MAXLINE];
 	long lineno = 0;
-	int c, except = 0, number = 0, found = 0;
+	int c, found;
 
 	while (--argc > 0 && (*++argv)[0] == '-')
 		while ((c = *++argv[0]))
 			switch (c) {
 				case 'x':
-					except = 1;
+					flags.except = 1;
 					break;
 				case 'n':
-					number = 1;
+					flags.number = 1;
 					break;
 				default:
 					printf("find: illegal option %c\n", c);
@@ -30,12 +35,12 @@ main(int argc, char *argv[])
 			}
 	
 	if (argc != 1)
-		printf("Usage: find -x -n pattern\n");
+		printf("Usage: find -x -n pattern -f filename1 filename2 ...\n");
 	else
 		while (getline2(line, MAXLINE) > 0) {
 			lineno++;
-			if ((strstr(line, *argv) != NULL) != except) {
-				if (number)
+			if ((strstr(line, *argv) != NULL) != flags.except) {
+				if (flags.number)
 					printf("%ld:", lineno);
 				printf("%s", line);
 				found++;
