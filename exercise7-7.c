@@ -61,6 +61,7 @@ int main(int argc, char *argv[])
 			/* *argv still indicating the pattern name */
 			while (--argc > 0) {
 				/* read file */
+				lineno = 0;
 				if ((fp = fopen(*++argv, "r")) == NULL) {
 					fprintf(stderr, "%s: can't open %s\n", prog, *argv);
 					exit(1);
@@ -71,7 +72,7 @@ int main(int argc, char *argv[])
 						lineno++;
 						if ((strstr(line2, keyword) != NULL) != flags.except) {
 							if (flags.number)
-								printf("%ld:", lineno);
+								printf("%s %ld:", *argv, lineno);
 							printf("%s", line2);
 							found++;
 						}
