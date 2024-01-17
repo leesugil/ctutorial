@@ -5,6 +5,7 @@
 #include "template_clock.c"
 
 #include <stdio.h>
+#include <stdlib.h>
 
 /* cat: concatenate files, version 2 */
 int main(int argc, char *argv[])
@@ -30,7 +31,6 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "%s: error writing stdout\n", prog);
 		exit(2);
 	}
-	exit(0);
 
 
 
@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 
 
 	time_measure_end();		/* code end */
-	return 0;
+	exit(0);
 }
 
 /* filecopy: copy file ifp to file ofp */
