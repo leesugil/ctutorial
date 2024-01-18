@@ -12,6 +12,7 @@ Jan 18 2024
 Sugil Steve Lee
 
 ### Chapters
+
 1. A Tutorial Introduction
 <details>
 	<summary>Click here to expand</summary>
