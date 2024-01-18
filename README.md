@@ -13,7 +13,7 @@ Sugil Steve Lee
 
 ## Index
 
-### 1. [A Tutorial Introduction](Chapter 1 - A Tutorial Introduction/README.md)
+### 1. [A Tutorial Introduction]("Chapter 1 - A Tutorial Introduction/README.md")
 
 ### 2. [Types, Operators and Expressions](Chapter 2 - Types Operators and Expressions/README.md)
 ### 3. [Control Flow](Chapter 3 - Control Flow/README.md)
