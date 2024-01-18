@@ -1,5 +1,5 @@
-# Learning C
-## from _The ANSI C Programming Language_ by _Brian W. Kernighan_ and _Dennis M. Ritchie_
+# ctutorial
+## Worked examples from _The ANSI C Programming Language_ by _Brian W. Kernighan_ and _Dennis M. Ritchie_
 ### Solutions to exercise problems
 
 Hi, my name is Steve, and I'd always wanted to understand how computer hardwares, memory spaces, and operating systems are controlled by **(the mighty) C**. Last year was fortunate enough for me to have some time into learning the core basics of the language, and I couldn't help grabbing the seminal book of C, _The ANSI C Programming Language_ by _K&R_. It was an exciting journey to see how I/O are handled at low level, and working on the exercise problems filled in some of the knowledge gaps I had in low-level programming.
