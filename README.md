@@ -11,6 +11,17 @@ The purpose of this repo is to provide a quick glimpse of important features and
 Jan 18 2024
 Sugil Steve Lee
 
+## Index
+
+## 1. [A Tutorial Introduction](Chapter_1_-_A_Tutorial_Introduction/README.md)
+## 2. [Types, Operators and Expressions](Chapter_2_-_Types_Operators_and_Expressions/README.md)
+## 3. [Control Flow](Chapter_3_-_Control_Flow/README.md)
+## 4. [Functions and Program Structure](Chapter_4_-_Functions_and_Program_Structure/README.md)
+## 5. [Pointers and Arrays](Chapter_5_-_Pointers_and_Arrays/README.md)
+## 6. [Structures](Chapter_6_-_Structures/README.md)
+## 7. [Input and Output](Chapter_7_-_Input_and_Output/README.md)
+## 8. [The UNIX System Interface](Chapter_8_-_The_Unix_System_Interface/README.md)
+
 ## Chapters
 
 ## 1. [A Tutorial Introduction](Chapter_1_-_A_Tutorial_Introduction/README.md)
