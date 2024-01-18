@@ -15,17 +15,17 @@ Sugil Steve Lee
 
 ### 1. [A Tutorial Introduction](Chapter%201%20-%20A%20Tutorial%20Introduction/README.md)
 
-### 2. [Types, Operators and Expressions](Chapter 2 - Types Operators and Expressions/README.md)
-### 3. [Control Flow](Chapter 3 - Control Flow/README.md)
-### 4. [Functions and Program Structure](Chapter 4 - Functions and Program_Structure/README.md)
-### 5. [Pointers and Arrays](Chapter 5 - Pointers_and_Arrays/README.md)
-### 6. [Structures](Chapter 6 - Structures/README.md)
-### 7. [Input and Output](Chapter 7 - Input and Output/README.md)
-### 8. [The UNIX System Interface](Chapter 8 - The Unix System Interface/README.md)
+### 2. [Types, Operators and Expressions](Chapter%202%20-%20Types%20Operators%20and%20Expressions/README.md)
+### 3. [Control Flow](Chapter%203%20-%20Control%20Flow/README.md)
+### 4. [Functions and Program Structure](Chapter%204%20-%20Functions%20and%20Program%20Structure/README.md)
+### 5. [Pointers and Arrays](Chapter%205%20-%20Pointers%20and%20Arrays/README.md)
+### 6. [Structures](Chapter%206%20-%20Structures/README.md)
+### 7. [Input and Output](Chapter%207%20-%20Input%20and%20Output/README.md)
+### 8. [The UNIX System Interface](Chapter%208%20-%20The%20Unix%20System%20Interface/README.md)
 
 ## Chapters
 
-### 1. [A Tutorial Introduction](Chapter 1 - A Tutorial Introduction/README.md)
+### 1. [A Tutorial Introduction](Chapter%201%20-%20A%20Tutorial%20Introduction/README.md)
 	- "Hello, World!\n"
 	- Fahrenheit-Celsius table
 	- Symbolic Constants #define
@@ -34,7 +34,7 @@ Sugil Steve Lee
 	- Functions, getline(...)
 	- Local: automatic, static
 	- External - must be declared each time if defined in other (header) file
-### 2. [Types, Operators and Expressions](Chapter 2 - Types Operators and Expressions/README.md)
+### 2. [Types, Operators and Expressions](Chapter%202%20-%20Types%20Operators%20and%20Expressions/README.md)
 	- Variable Names: '\_'
 	- Data Types and Sizes: char, int, float, double, short, long, signed/unsigned - \<limits.h>, \<float.h>
 	- Constants: decimal (123.4), exponent (1e-2), octal (0123), hexadecimal (0xaa, 0XFF), long (L), unsigned (U) - 0XFUL
@@ -51,14 +51,14 @@ Sugil Steve Lee
 	- Assignment Operators and Expressions: +=
 	- Conditional Expressions: expr1 ? expr2 : expr3
 	- Precedence and Order of Evaluation
-### 3. [Control Flow](Chapter 3 - Control Flow/README.md)
+### 3. [Control Flow](Chapter%203%20-%20Control%20Flow/README.md)
 	- Statements and Blocks
 	- If-Else, Else-If, binsearch(...)
 	- Switch: digit counter, escape(...)
 	- Loops - While and For: atoi(...), shellsort(...), reverse(...), expand(...)
 	- Loops - Do-While: the body is executed at least once, itoa(...), itob(...)
 	- Break and Continue, Goto and labels
-### 4. [Functions and Program Structure](Chapter 4 - Functions and Program Structure/README.md)
+### 4. [Functions and Program Structure](Chapter%204%20-%20Functions%20and%20Program%20Structure/README.md)
 	- Basics of Functions: strindex(...)
 	- Functions Returning Non-integers: atof(...), \<stdlib.h>, calculator, atoi(...)
 	- External Variables: reverse Polish calculator (push-pop, getop, getch-ungetch, buf[BUFSIZ]), ungets(...).
@@ -67,7 +67,7 @@ Sugil Steve Lee
 	- Block Structure, Initialization
 	- Recursion: printd(...), qsort(...), swap(...), itoa(...), reverse(...)
 	- The C Preprocessor: File Inclusion (#include), Macro Substitution (#define), Conditional Inclusion (#if defined(name), #endif, #ifndef)
-### 5. [Pointers and Arrays](Chapter 5 - Pointers and Arrays/README.md)
+### 5. [Pointers and Arrays](Chapter%205%20-%20Pointers%20and%20Arrays/README.md)
 	- Pointers and Addresses, Function Arguments, Arrays
 	- Address Arithmetic: allocbuf(...), alloc(...), afree(...)
 	- Character Pointers and Functions: strcpy(...), strcmp(...), <string.h>, strcat(...), strend(...), strncpy, strncat, strncmp
@@ -78,7 +78,7 @@ Sugil Steve Lee
 	- Command-line Arguments: argc, \*argv\[] - echo, find, expr, entab, detab, tail
 	- Pointers to Functions: void qsort(..., int (\*comp)(void \*, void \*)); qsort(...)(numeric ? numcmp : strcmp);
 	- Complicated Declarations: int \*f(); vs. int (\*pf)();. typedef, declaration parsing (dcl, direct-dcl, token), undcl
-### 6. [Structures](Chapter 6 - Structures/README.md)
+### 6. [Structures](Chapter%206%20-%20Structures/README.md)
 	- struct point { int x; int y; } pt1, pt2;, struct point makepoint(int, int);, pt-\>x
 	- Arrays of Structures: struct key { char \*word; int count; } keytab\[NKEYS];, binsearch(...), sizeof, #define NKEYS (sizeof keytab / sizeof(struct key))
 	- Pointers to Structures
@@ -87,7 +87,7 @@ Sugil Steve Lee
 	- Typedef
 	- Unions
 	- Bit-fields
-### 7. [Input and Output](Chapter 7 - Input and Output/README.md)
+### 7. [Input and Output](Chapter%207%20-%20Input%20and%20Output/README.md)
 	- Standard Input and Output: getchar, <, |, putchar, >, |
 	- Formatted Output - Printf, fprintf, sprintf
 	- Variable-length Argument Lists - va\_list
@@ -103,7 +103,7 @@ Sugil Steve Lee
 		- Storage Management: malloc, calloc
 		- Mathematical Functions: sin, cos, atan2, exp, log, log10, pow, sqrt, fabs
 		- Random Number Generation: rand, srand
-### 8. [The UNIX System Interface](Chapter 8 - The Unix System Interface/README.md)
+### 8. [The UNIX System Interface](Chapter%208%20-%20The%20Unix%20System%20Interface/README.md)
 	- File Descriptors
 		- More low-level I/O control than file pointers which are part of the standard C library.
 		- Whenever the command interpreter (the shell) runs a program, three files are open
